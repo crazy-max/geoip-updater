@@ -1,7 +1,7 @@
 ## more info https://github.com/crazy-max/ghaction-github-labeler
 - # bot
   name: ":robot: bot"
-  color: "69cde9" 
+  color: "69cde9"
   description: ""
 - # bug
   name: ":bug: bug"
