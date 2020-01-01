@@ -1,0 +1,17 @@
+version: "3.2"
+
+services:
+  geoip-updater:
+    image: crazymax/geoip-updater:latest
+    container_name: geoip-updater
+    volumes:
+      - "./data:/data"
+    environment:
+      - "TZ=Europe/Paris"
+      - "EDITION_IDS=GeoLite2-ASN,GeoLite2-City,GeoLite2-Country"
+      - "LICENSE_KEY=0123456789ABCD"
+      - "DOWNLOAD_PATH=/data"
+      - "SCHEDULE=0 0 * * 0"
+      - "LOG_LEVEL=info"
+      - "LOG_JSON=false"
+    restart: always
