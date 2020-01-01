@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"io"
 	"os"
+	"strings"
 )
 
 func checksum(filename string) (string, error) {
@@ -33,4 +34,8 @@ func createFile(path string, content string) error {
 		return err
 	}
 	return nil
+}
+
+func formatPath(path string) string {
+	return strings.Replace(path, `\`, `/`, -1)
 }
