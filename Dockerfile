@@ -56,21 +56,17 @@ LABEL maintainer="CrazyMax" \
   org.label-schema.vendor="CrazyMax" \
   org.label-schema.schema-version="1.0"
 
+ENV EDITION_IDS="GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
+  DOWNLOAD_PATH="/data"
+
 RUN apk --update --no-cache add \
     ca-certificates \
     libressl \
-    shadow \
-  && addgroup -g 1000 geoip-updater \
-  && adduser -u 1000 -G geoip-updater -s /sbin/nologin -D geoip-updater \
+    tzdata \
   && rm -rf /tmp/* /var/cache/apk/*
 
 COPY --from=builder /app/geoip-updater /usr/local/bin/geoip-updater
 COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
 RUN geoip-updater --version
-
-USER geoip-updater
-
-ENV EDITION_IDS="GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
-  DOWNLOAD_PATH="/data"
 
 ENTRYPOINT [ "/usr/local/bin/geoip-updater" ]

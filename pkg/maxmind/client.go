@@ -51,6 +51,12 @@ func New(config Config) (*Client, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot get absolute download path")
 	}
+	if err := os.MkdirAll(config.DownloadPath, 0755); err != nil {
+		return nil, errors.Wrap(err, "Cannot create download folder")
+	}
+	if err := isDirWriteable(config.DownloadPath); err != nil {
+		return nil, errors.Wrap(err, "Download folder is not writable")
+	}
 	config.DownloadPath = formatPath(config.DownloadPath)
 	config.Logger.Debug().Msgf("Download path: %s", config.DownloadPath)
 
@@ -63,10 +69,13 @@ func New(config Config) (*Client, error) {
 	}
 
 	tmpdir := formatPath(path.Join(os.TempDir(), "geoip-updater"))
-	if err := os.MkdirAll(tmpdir, 0700); err != nil {
+	config.Logger.Debug().Msgf("Temp path: %s", tmpdir)
+	if err := os.MkdirAll(tmpdir, 0755); err != nil {
 		return nil, errors.Wrap(err, "Cannot create temp folder")
 	}
-	config.Logger.Debug().Msgf("Temp path: %s", tmpdir)
+	if err := isDirWriteable(config.DownloadPath); err != nil {
+		return nil, errors.Wrap(err, "Temp folder is not writable")
+	}
 
 	return &Client{
 		log:        config.Logger,
