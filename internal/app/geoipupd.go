@@ -104,7 +104,13 @@ func (c *Client) Run() {
 	for _, eid := range c.eids {
 		sublog := log.With().Str("edition_id", eid.String()).Logger()
 
-		dbs, err := c.mm.DownloadDB(eid, c.cfg.Flags.DownloadPath)
+		dcli, err := c.mm.NewDownloader(eid, c.cfg.Flags.DownloadPath)
+		if err != nil {
+			sublog.Error().Err(err).Msg("Cannot create downloader instance")
+			continue
+		}
+
+		dbs, err := dcli.Download()
 		if err != nil {
 			sublog.Error().Err(err).Msg("Cannot download database")
 			continue

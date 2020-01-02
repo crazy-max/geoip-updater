@@ -1,6 +1,7 @@
 package maxmind
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/hex"
 	"io"
@@ -9,7 +10,7 @@ import (
 	"path/filepath"
 )
 
-func checksum(filename string) (string, error) {
+func checksumFromFile(filename string) (string, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return "", err
@@ -22,6 +23,17 @@ func checksum(filename string) (string, error) {
 	}
 
 	return hex.EncodeToString(hash.Sum(nil)), nil
+}
+
+func checksumFromReader(reader io.Reader) (string, io.Reader, error) {
+	var b bytes.Buffer
+
+	hash := md5.New()
+	if _, err := io.Copy(&b, io.TeeReader(reader, hash)); err != nil {
+		return "", nil, err
+	}
+
+	return hex.EncodeToString(hash.Sum(nil)), &b, nil
 }
 
 func createFile(path string, content string) error {

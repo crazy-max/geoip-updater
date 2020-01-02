@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 (2020/01/02)
+
+* Fix incorrect checksum from archive
+
 ## 0.2.0 (2020/01/02)
 
 * Improve extraction process and logging

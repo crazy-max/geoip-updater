@@ -28,7 +28,7 @@ type Config struct {
 	UserAgent  string
 }
 
-// New returns a mmdbdl client
+// New returns a maxmind client
 func New(config Config) (*Client, error) {
 	if config.LicenseKey == "" {
 		return nil, errors.New("License key required")
