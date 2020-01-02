@@ -23,7 +23,7 @@ Environment variables can be used within your container:
 * `TZ`: Timezone assigned to geoip-updater
 * `EDITION_IDS`: Edition IDs list (comma separated) of the MaxMind's GeoIP2 databases to update (default `GeoLite2-ASN,GeoLite2-City,GeoLite2-Country`)
 * `LICENSE_KEY`: [MaxMind License Key](../prerequisites.md#license-key) in order to download databases
-* `DOWNLOAD_PATH`: Folder where databases will be stored (default `/data`)
+* `DOWNLOAD_PATH`: Directory where databases will be stored (default `/data`)
 * `SCHEDULE`: [CRON expression](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format) to schedule geoip-updater
 * `LOG_LEVEL`: Log level output (default `info`)
 * `LOG_JSON`: Enable JSON logging output (default `false`)

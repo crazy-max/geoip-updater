@@ -9,6 +9,7 @@ import (
 
 	"github.com/crazy-max/geoip-updater/internal/config"
 	"github.com/crazy-max/geoip-updater/pkg/maxmind"
+	"github.com/docker/go-units"
 	"github.com/hako/durafmt"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog/log"
@@ -20,6 +21,7 @@ type Client struct {
 	loc    *time.Location
 	cron   *cron.Cron
 	mm     *maxmind.Client
+	eids   []maxmind.EditionID
 	jobID  cron.EntryID
 	locker uint32
 }
@@ -39,11 +41,9 @@ func New(cfg *config.Configuration, loc *time.Location) (*Client, error) {
 
 	// MaxMind client
 	mmcli, err := maxmind.New(maxmind.Config{
-		Logger:       log.Logger,
-		LicenseKey:   cfg.Flags.LicenseKey,
-		EditionIDs:   eids,
-		DownloadPath: cfg.Flags.DownloadPath,
-		UserAgent:    fmt.Sprintf("geoip-updater/%s go/%s %s", cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)),
+		Logger:     log.Logger,
+		LicenseKey: cfg.Flags.LicenseKey,
+		UserAgent:  fmt.Sprintf("geoip-updater/%s go/%s %s", cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)),
 	})
 	if err != nil {
 		return nil, err
@@ -55,7 +55,8 @@ func New(cfg *config.Configuration, loc *time.Location) (*Client, error) {
 		cron: cron.New(cron.WithLocation(loc), cron.WithParser(cron.NewParser(
 			cron.SecondOptional|cron.Minute|cron.Hour|cron.Dom|cron.Month|cron.Dow|cron.Descriptor),
 		)),
-		mm: mmcli,
+		mm:   mmcli,
+		eids: eids,
 	}, nil
 }
 
@@ -100,7 +101,27 @@ func (c *Client) Run() {
 			c.cron.Entry(c.jobID).Next)
 	}
 
-	c.mm.DownloadDBs()
+	for _, eid := range c.eids {
+		sublog := log.With().Str("edition_id", eid.String()).Logger()
+
+		dbs, err := c.mm.DownloadDB(eid, c.cfg.Flags.DownloadPath)
+		if err != nil {
+			sublog.Error().Err(err).Msg("Cannot download database")
+			continue
+		}
+
+		if len(dbs) == 0 {
+			sublog.Info().Msg("This edition is already up to date")
+			continue
+		}
+
+		for _, db := range dbs {
+			sublog.Info().
+				Str("size", units.HumanSize(float64(db.Size()))).
+				Time("modtime", db.ModTime()).
+				Msgf("%s database successfully updated", db.Name())
+		}
+	}
 }
 
 // Close closes geoip-updater

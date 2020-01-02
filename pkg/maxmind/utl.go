@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func checksum(filename string) (string, error) {
@@ -38,14 +37,18 @@ func createFile(path string, content string) error {
 	return nil
 }
 
-func formatPath(path string) string {
-	return strings.Replace(path, `\`, `/`, -1)
-}
-
 func isDirWriteable(dir string) error {
 	f := filepath.Join(dir, ".touch")
 	if err := ioutil.WriteFile(f, []byte(""), 0600); err != nil {
 		return err
 	}
 	return os.Remove(f)
+}
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
 }

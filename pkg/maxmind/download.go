@@ -1,6 +1,8 @@
 package maxmind
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -15,59 +17,50 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// DownloadDBs download databases
-func (c *Client) DownloadDBs() {
-	for _, eid := range c.editionIDs {
-		if err := c.downloadDB(eid); err != nil {
-			c.log.Error().Err(err).
-				Str("edition_id", eid.String()).
-				Msg("Cannot download database")
-		}
-	}
-}
+// DownloadDB download a database
+func (c *Client) DownloadDB(eid EditionID, dlDir string) ([]os.FileInfo, error) {
+	var err error
 
-func (c *Client) downloadDB(eid EditionID) error {
+	// Check download directory
+	if dlDir == "" {
+		dlDir = filepath.Dir(os.Args[0])
+	}
+	dlDir, err = filepath.Abs(path.Clean(dlDir))
+	if err != nil {
+		return nil, errors.Wrap(err, "Cannot get absolute path of download directory")
+	}
+	if err := os.MkdirAll(dlDir, 0755); err != nil {
+		return nil, errors.Wrap(err, "Cannot create download directory")
+	}
+	if err := isDirWriteable(dlDir); err != nil {
+		return nil, errors.Wrap(err, "Download directory is not writable")
+	}
+
 	// Retrieve expected hash
 	expHash, err := c.expectedHash(eid)
 	if err != nil {
-		return errors.Wrap(err, "Cannot get archive MD5 hash")
-	}
-
-	// Check with current hash
-	curHash, err := c.currentHash(eid)
-	if err != nil {
-		return err
-	}
-	if expHash == curHash {
-		c.log.Debug().
-			Str("edition_id", eid.String()).
-			Str("hash", expHash).
-			Msg("Database is already up to date")
-		return nil
+		return nil, errors.Wrap(err, "Cannot get archive MD5 hash")
 	}
 
 	// Download DB archive
-	archive := path.Join(c.tmpdir, eid.Filename())
+	archive := path.Join(c.workDir, eid.Filename())
 	if err := c.downloadArchive(eid, expHash, archive); err != nil {
-		return err
+		return nil, err
 	}
 
 	// Create MD5 file
-	md5file := path.Join(c.dlPath, fmt.Sprintf(".%s.%s", eid.Filename(), "md5"))
+	md5file := path.Join(c.workDir, fmt.Sprintf(".%s.%s", eid.Filename(), "md5"))
 	if err := createFile(md5file, expHash); err != nil {
-		return errors.Errorf("Cannot create MD5 file %s", md5file)
+		return nil, errors.Errorf("Cannot create MD5 file %s", md5file)
 	}
 
 	// Extract DB from archive
-	if err := c.extractArchive(eid, archive); err != nil {
-		return err
+	dbs, err := c.extractArchive(eid, archive, dlDir)
+	if err != nil {
+		return nil, err
 	}
 
-	c.log.Info().
-		Str("edition_id", eid.String()).
-		Msgf("Database successfully updated")
-
-	return nil
+	return dbs, nil
 }
 
 func (c *Client) expectedHash(eid EditionID) (string, error) {
@@ -105,7 +98,7 @@ func (c *Client) expectedHash(eid EditionID) (string, error) {
 }
 
 func (c *Client) currentHash(eid EditionID) (string, error) {
-	md5file := path.Join(c.dlPath, fmt.Sprintf(".%s.%s", eid.Filename(), "md5"))
+	md5file := path.Join(c.workDir, fmt.Sprintf(".%s.%s", eid.Filename(), "md5"))
 	if _, err := os.Stat(md5file); os.IsNotExist(err) {
 		return "", nil
 	} else if err != nil {
@@ -135,7 +128,7 @@ func (c *Client) downloadArchive(eid EditionID, expHash string, archive string) 
 
 	c.log.Info().
 		Str("edition_id", eid.String()).
-		Msgf("Downloading archive...")
+		Msgf("Downloading %s archive...", filepath.Base(archive))
 
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/app/geoip_download", c.baseURL), nil)
 	if err != nil {
@@ -185,8 +178,9 @@ func (c *Client) downloadArchive(eid EditionID, expHash string, archive string) 
 	return nil
 }
 
-func (c *Client) extractArchive(eid EditionID, archive string) error {
-	return archiver.Walk(archive, func(f archiver.File) error {
+func (c *Client) extractArchive(eid EditionID, archive string, dlDir string) ([]os.FileInfo, error) {
+	var dbs []os.FileInfo
+	err := archiver.Walk(archive, func(f archiver.File) error {
 		if f.IsDir() {
 			return nil
 		}
@@ -194,23 +188,38 @@ func (c *Client) extractArchive(eid EditionID, archive string) error {
 			return nil
 		}
 
+		expHashRaw := md5.New()
+		fileReader := io.TeeReader(f, expHashRaw)
+		expHash := hex.EncodeToString(expHashRaw.Sum(nil))
+
 		sublog := log.With().
 			Str("edition_id", eid.String()).
 			Str("db_name", f.Name()).
 			Str("db_size", units.HumanSize(float64(f.Size()))).
 			Time("db_modtime", f.ModTime()).
+			Str("db_hash", expHash).
 			Logger()
 
-		dbpath := path.Join(c.dlPath, f.Name())
-		sublog.Debug().Msg("Extracting database")
+		dbpath := path.Join(dlDir, f.Name())
+		if fileExists(dbpath) {
+			curHash, err := checksum(dbpath)
+			if err != nil {
+				return err
+			}
+			if expHash == curHash {
+				sublog.Debug().Msg("Database is already up to date")
+				return nil
+			}
+		}
 
+		sublog.Debug().Msg("Extracting database")
 		dbfile, err := os.Create(dbpath)
 		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("Cannot create database file %s", f.Name()))
 		}
 		defer dbfile.Close()
 
-		_, err = io.Copy(dbfile, f)
+		_, err = io.Copy(dbfile, fileReader)
 		if err != nil {
 			return errors.Wrap(err, fmt.Sprintf("Cannot extract database file %s", f.Name()))
 		}
@@ -219,6 +228,9 @@ func (c *Client) extractArchive(eid EditionID, archive string) error {
 			sublog.Warn().Err(err).Msg("Cannot preserve modtime of database file")
 		}
 
+		dbs = append(dbs, f)
 		return nil
 	})
+
+	return dbs, err
 }

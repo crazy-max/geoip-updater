@@ -21,20 +21,10 @@ func TestNew(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "Empty edition IDs",
-			wantData: maxmind.Config{
-				LicenseKey: "0123456789",
-			},
-			wantErr: true,
-		},
-		{
 			name: "Invalid base URL",
 			wantData: maxmind.Config{
 				LicenseKey: "0123456789",
-				EditionIDs: []maxmind.EditionID{
-					maxmind.EIDGeoLite2ASN,
-				},
-				BaseURL: "foo.bar",
+				BaseURL:    "foo.bar",
 			},
 			wantErr: true,
 		},
@@ -42,10 +32,6 @@ func TestNew(t *testing.T) {
 			name: "Success",
 			wantData: maxmind.Config{
 				LicenseKey: "0123456789",
-				EditionIDs: []maxmind.EditionID{
-					maxmind.EIDGeoLite2ASN,
-				},
-				DownloadPath: "/usr/local/share/geoip",
 			},
 		},
 	}

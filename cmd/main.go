@@ -33,7 +33,7 @@ func main() {
 		Envar("LICENSE_KEY").
 		PlaceHolder("0123456789").
 		StringVar(&flags.LicenseKey)
-	kingpin.Flag("download-path", "Folder where databases will be stored.").
+	kingpin.Flag("download-path", "Directory where databases will be stored.").
 		Envar("DOWNLOAD_PATH").
 		PlaceHolder("./").
 		StringVar(&flags.DownloadPath)

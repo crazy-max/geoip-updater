@@ -25,7 +25,7 @@ Flags:
   --help                    Show context-sensitive help (also try --help-long
                             and --help-man).
   --license-key=0123456789  MaxMind License Key.
-  --download-path=./        Folder where databases will be stored.
+  --download-path=./        Directory where databases will be stored.
   --schedule=0 0 * * 0      CRON expression format.
   --timezone="UTC"          Timezone assigned to geoip-updater.
   --log-level="info"        Set log level.
