@@ -15,8 +15,19 @@
 
 ## Example
 
-`geoip_updater --license-key 0123456789ABCD GeoLite2-City`
+```
+geoip_updater \
+  --license-key 0123456789ABCD \
+  GeoLite2-City
+```
 > Download `GeoLite2-City` database with licence key `0123456789ABCD` to geoip-updater root directory
 
-`geoip_updater --license-key 0123456789ABCD --download-path /usr/local/share/geoip --schedule "0 0 * * 0" --log-level debug GeoLite2-City,GeoLite2-Country`
+```
+geoip_updater \
+  --license-key 0123456789ABCD \
+  --download-path /usr/local/share/geoip \
+  --schedule "0 0 * * 0" \
+  --log-level debug \
+  GeoLite2-City,GeoLite2-Country
+```
 > Download `GeoLite2-City` and `GeoLite2-Country` databases with licence key `0123456789ABCD` to `/usr/local/share/geoip` with log level to `debug` on a time-based schedule (`every week`)
