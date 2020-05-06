@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0 (2020/05/06)
+
+* Switch to kong command-line parser
+* Edition IDs are now passed through the `--edition-ids` flag
+* Add `--log-caller` flag
+* Flag `--log-json` not handled
+* Latest Go 1.13
+* Switch to Open Container Specification labels as label-schema.org ones are deprecated
+
 ## 0.2.1 (2020/01/02)
 
 * Fix incorrect checksum from archive
