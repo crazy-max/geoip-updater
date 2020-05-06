@@ -221,7 +221,6 @@ func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 			if err != nil {
 				return err
 			}
-			fmt.Println(expHash, curHash)
 			if expHash == curHash {
 				sublog.Debug().Msg("Database is already up to date")
 				return nil

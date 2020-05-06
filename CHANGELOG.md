@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 (2020/05/06)
+
+* Remove unexpected log output
+
 ## 1.0.0 (2020/05/06)
 
 * Switch to kong command-line parser

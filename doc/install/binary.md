@@ -7,7 +7,7 @@ geoip-updater binaries are available in [releases](https://github.com/crazy-max/
 Choose the archive matching the destination platform and extract geoip-updater:
 
 ```
-wget -qO- https://github.com/crazy-max/geoip-updater/releases/download/v1.0.0/geoip-updater_1.0.0_linux_x86_64.tar.gz | tar -zxvf - geoip-updater
+wget -qO- https://github.com/crazy-max/geoip-updater/releases/download/v1.0.1/geoip-updater_1.0.1_linux_x86_64.tar.gz | tar -zxvf - geoip-updater
 ```
 
 ## Test
