@@ -8,6 +8,7 @@
 * Flag `--log-json` not handled
 * Latest Go 1.13
 * Switch to Open Container Specification labels as label-schema.org ones are deprecated
+* Update deps
 
 ## 0.2.1 (2020/01/02)
 
