@@ -8,10 +8,10 @@
 * `--license-key`: [MaxMind License Key](prerequisites.md#license-key) in order to download databases. **Required**.
 * `--download-path`: Directory where databases will be stored. (default to geoip-updater root directory).
 * `--schedule <cron expression>`: [CRON expression](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format) to schedule geoip-updater. (eg. `0 0 * * 0`).
-* `--timezone <timezone>`: Timezone assigned to geoip-updater. (default: `UTC`).
-* `--log-level <level>`: Log level output. (default: `info`).
-* `--log-json`: Enable JSON logging output. (default: `false`).
-* `--log-caller`: Enable to add file:line of the caller. (default: `false`).
+* `--timezone <timezone>`: Timezone assigned to geoip-updater. (default `UTC`).
+* `--log-level <level>`: Log level output. (default `info`).
+* `--log-json`: Enable JSON logging output. (default `false`).
+* `--log-caller`: Add file:line of the caller to log output. (default `false`).
 
 ## Example
 

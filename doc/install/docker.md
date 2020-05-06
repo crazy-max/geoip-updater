@@ -27,6 +27,7 @@ Environment variables can be used within your container:
 * `SCHEDULE`: [CRON expression](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format) to schedule geoip-updater
 * `LOG_LEVEL`: Log level output (default `info`)
 * `LOG_JSON`: Enable JSON logging output (default `false`)
+* `LOG_CALLER`: Add file:line of the caller to log output (default `false`)
 
 Docker compose is the recommended way to run this image. Copy the content of folder [.res/compose](../../.res/compose) in `/opt/geoip-updater/` on your host for example. Edit the compose file with your preferences and run the following commands:
 
