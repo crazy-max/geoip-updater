@@ -7,67 +7,41 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/alecthomas/kingpin"
+	"github.com/alecthomas/kong"
 	"github.com/crazy-max/geoip-updater/internal/app"
 	"github.com/crazy-max/geoip-updater/internal/config"
 	"github.com/crazy-max/geoip-updater/internal/logging"
-	"github.com/crazy-max/geoip-updater/pkg/maxmind"
 	"github.com/rs/zerolog/log"
 )
 
 var (
 	geoipupd *app.Client
-	flags    config.Flags
+	cli      config.Cli
 	version  = "dev"
 )
 
 func main() {
 	// Parse command line
-	kingpin.Arg("edition-ids", "MaxMind Edition ID dbs to download (comma separated).").
-		Required().
-		Envar("EDITION_IDS").
-		HintOptions(string(maxmind.EIDGeoLite2ASN), fmt.Sprintf("%s,%s", maxmind.EIDGeoLite2ASN, maxmind.EIDGeoLite2City)).
-		StringVar(&flags.EditionIDs)
-	kingpin.Flag("license-key", "MaxMind License Key.").
-		Required().
-		Envar("LICENSE_KEY").
-		PlaceHolder("0123456789").
-		StringVar(&flags.LicenseKey)
-	kingpin.Flag("download-path", "Directory where databases will be stored.").
-		Envar("DOWNLOAD_PATH").
-		PlaceHolder("./").
-		StringVar(&flags.DownloadPath)
-	kingpin.Flag("schedule", "CRON expression format.").
-		Envar("SCHEDULE").
-		PlaceHolder("0 0 * * 0").
-		StringVar(&flags.Schedule)
-	kingpin.Flag("timezone", "Timezone assigned to geoip-updater.").
-		Envar("TZ").
-		Default("UTC").
-		HintOptions("Europe/Paris").
-		StringVar(&flags.Timezone)
-	kingpin.Flag("log-level", "Set log level.").
-		Envar("LOG_LEVEL").
-		Default("info").
-		HintOptions("info", "warn", "debug").
-		StringVar(&flags.LogLevel)
-	kingpin.Flag("log-json", "Enable JSON logging output.").
-		Envar("LOG_JSON").
-		Default("false").
-		BoolVar(&flags.LogJson)
-	kingpin.UsageTemplate(kingpin.CompactUsageTemplate).Version(version).Author("CrazyMax")
-	kingpin.CommandLine.Name = "geoip-updater"
-	kingpin.CommandLine.Help = `Download MaxMind's GeoIP2 databases on a time-based schedule. More info: https://github.com/crazy-max/geoip-updater`
-	kingpin.Parse()
+	_ = kong.Parse(&cli,
+		kong.Name("geoip-updater"),
+		kong.Description(`Download MaxMind's GeoIP2 databases on a time-based schedule. More info: https://github.com/crazy-max/geoip-updater`),
+		kong.UsageOnError(),
+		kong.Vars{
+			"version": fmt.Sprintf("%s", version),
+		},
+		kong.ConfigureHelp(kong.HelpOptions{
+			Compact: true,
+			Summary: true,
+		}))
 
 	// Load timezone location
-	location, err := time.LoadLocation(flags.Timezone)
+	location, err := time.LoadLocation(cli.Timezone)
 	if err != nil {
-		log.Panic().Err(err).Msgf("Cannot load timezone %s", flags.Timezone)
+		log.Panic().Err(err).Msgf("Cannot load timezone %s", cli.Timezone)
 	}
 
 	// Init
-	logging.Configure(&flags, location)
+	logging.Configure(&cli, location)
 	log.Info().Msgf("Starting geoip-updater %s", version)
 
 	// Handle os signals
@@ -81,7 +55,7 @@ func main() {
 	}()
 
 	// Load and check configuration
-	cfg, err := config.Load(flags, version)
+	cfg, err := config.Load(cli, version)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Cannot load configuration")
 	}

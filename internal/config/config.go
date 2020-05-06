@@ -1,20 +1,24 @@
 package config
 
+import "github.com/alecthomas/kong"
+
 // Configuration holds configuration details
 type Configuration struct {
-	Flags Flags
-	App   App
+	Cli Cli
+	App App
 }
 
-// Flags holds flags from command line
-type Flags struct {
-	LicenseKey   string
-	EditionIDs   string
-	DownloadPath string
-	Schedule     string
-	Timezone     string
-	LogLevel     string
-	LogJson      bool
+// Cli holds command line args, flags and cmds
+type Cli struct {
+	Version      kong.VersionFlag
+	EditionIDs   []string `kong:"required,name='edition-ids',env='EDITION_IDS',sep=',',placeholder='GeoLite2-City,GeoLite2-Country',help='MaxMind Edition ID dbs to download (comma separated).'"`
+	LicenseKey   string   `kong:"required,name='license-key',env='LICENSE_KEY',placeholder='0123456789',help='MaxMind License Key'"`
+	DownloadPath string   `kong:"name='download-path',env='DOWNLOAD_PATH',placeholder='./',help='Directory where databases will be stored.'"`
+	Schedule     string   `kong:"name='schedule',env='SCHEDULE',placeholder='0 0 * * 0',help='CRON expression format.'"`
+	Timezone     string   `kong:"name='timezone',env='TZ',default='UTC',help='Timezone assigned to geoip-updater.'"`
+	LogLevel     string   `kong:"name='log-level',env='LOG_LEVEL',default='info',help='Set log level.'"`
+	LogJSON      bool     `kong:"name='log-json',env='LOG_JSON',default='false',help='Enable JSON logging output.'"`
+	LogCaller    bool     `kong:"name='log-caller',env='LOG_CALLER',default='false',help='Enable to add file:line of the caller.'"`
 }
 
 // App holds application details
@@ -27,9 +31,9 @@ type App struct {
 }
 
 // Load returns Configuration struct
-func Load(fl Flags, version string) (*Configuration, error) {
+func Load(cli Cli, version string) (*Configuration, error) {
 	cfg := &Configuration{
-		Flags: fl,
+		Cli: cli,
 		App: App{
 			Name:    "geoip-updater",
 			Desc:    "Download MaxMind's GeoIP2 databases on a time-based schedule",

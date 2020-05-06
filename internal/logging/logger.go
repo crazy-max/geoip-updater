@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"io"
 	"os"
 	"time"
 
@@ -10,19 +11,31 @@ import (
 )
 
 // Configure configures logger
-func Configure(fl *config.Flags, location *time.Location) {
+func Configure(cli *config.Cli, location *time.Location) {
 	var err error
+	var w io.Writer
 
 	zerolog.TimestampFunc = func() time.Time {
 		return time.Now().In(location)
 	}
 
-	log.Logger = zerolog.New(zerolog.ConsoleWriter{
-		Out:        os.Stdout,
-		TimeFormat: time.RFC1123,
-	}).With().Timestamp().Logger()
+	if !cli.LogJSON {
+		w = zerolog.ConsoleWriter{
+			Out:        os.Stdout,
+			TimeFormat: time.RFC1123,
+		}
+	} else {
+		w = os.Stdout
+	}
 
-	logLevel, err := zerolog.ParseLevel(fl.LogLevel)
+	ctx := zerolog.New(w).With().Timestamp()
+	if cli.LogCaller {
+		ctx = ctx.Caller()
+	}
+
+	log.Logger = ctx.Logger()
+
+	logLevel, err := zerolog.ParseLevel(cli.LogLevel)
 	if err != nil {
 		log.Fatal().Err(err).Msgf("Unknown log level")
 	} else {

@@ -30,8 +30,7 @@ type Client struct {
 func New(cfg *config.Configuration, loc *time.Location) (*Client, error) {
 	// Check edition IDs
 	var eids []maxmind.EditionID
-	eidList := strings.Split(cfg.Flags.EditionIDs, ",")
-	for _, eidStr := range eidList {
+	for _, eidStr := range cfg.Cli.EditionIDs {
 		eid, err := maxmind.GetEditionID(eidStr)
 		if err != nil {
 			return nil, err
@@ -42,7 +41,7 @@ func New(cfg *config.Configuration, loc *time.Location) (*Client, error) {
 	// MaxMind client
 	mmcli, err := maxmind.New(maxmind.Config{
 		Logger:     log.Logger,
-		LicenseKey: cfg.Flags.LicenseKey,
+		LicenseKey: cfg.Cli.LicenseKey,
 		UserAgent:  fmt.Sprintf("geoip-updater/%s go/%s %s", cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)),
 	})
 	if err != nil {
@@ -68,16 +67,16 @@ func (c *Client) Start() error {
 	c.Run()
 
 	// Check scheduler enabled
-	if c.cfg.Flags.Schedule == "" {
+	if c.cfg.Cli.Schedule == "" {
 		return nil
 	}
 
 	// Init scheduler
-	c.jobID, err = c.cron.AddJob(c.cfg.Flags.Schedule, c)
+	c.jobID, err = c.cron.AddJob(c.cfg.Cli.Schedule, c)
 	if err != nil {
 		return err
 	}
-	log.Info().Msgf("Cron initialized with schedule %s", c.cfg.Flags.Schedule)
+	log.Info().Msgf("Cron initialized with schedule %s", c.cfg.Cli.Schedule)
 
 	// Start scheduler
 	c.cron.Start()
@@ -104,7 +103,7 @@ func (c *Client) Run() {
 	for _, eid := range c.eids {
 		sublog := log.With().Str("edition_id", eid.String()).Logger()
 
-		dcli, err := c.mm.NewDownloader(eid, c.cfg.Flags.DownloadPath)
+		dcli, err := c.mm.NewDownloader(eid, c.cfg.Cli.DownloadPath)
 		if err != nil {
 			sublog.Error().Err(err).Msg("Cannot create downloader instance")
 			continue
