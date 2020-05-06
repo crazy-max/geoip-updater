@@ -46,15 +46,15 @@ ARG VCS_REF
 ARG VERSION
 
 LABEL maintainer="CrazyMax" \
-  org.label-schema.build-date=$BUILD_DATE \
-  org.label-schema.name="geoip-updater" \
-  org.label-schema.description="Download MaxMind's GeoIP2 databases on a time-based schedule" \
-  org.label-schema.version=$VERSION \
-  org.label-schema.url="https://github.com/crazy-max/geoip-updater" \
-  org.label-schema.vcs-ref=$VCS_REF \
-  org.label-schema.vcs-url="https://github.com/crazy-max/geoip-updater" \
-  org.label-schema.vendor="CrazyMax" \
-  org.label-schema.schema-version="1.0"
+  org.opencontainers.image.created=$BUILD_DATE \
+  org.opencontainers.image.url="https://github.com/crazy-max/geoip-updater" \
+  org.opencontainers.image.source="https://github.com/crazy-max/geoip-updater" \
+  org.opencontainers.image.version=$VERSION \
+  org.opencontainers.image.revision=$VCS_REF \
+  org.opencontainers.image.vendor="CrazyMax" \
+  org.opencontainers.image.title="geoip-updater" \
+  org.opencontainers.image.description="Download MaxMind's GeoIP2 databases on a time-based schedule" \
+  org.opencontainers.image.licenses="MIT"
 
 ENV EDITION_IDS="GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
   DOWNLOAD_PATH="/data"
