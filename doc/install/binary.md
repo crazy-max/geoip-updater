@@ -18,7 +18,7 @@ After getting the binary, it can be tested with `./geoip-updater --help` or move
 $ ./geoip-updater --help
 Usage: geoip-updater --edition-ids=GeoLite2-City,GeoLite2-Country,... --license-key=0123456789
 
-Download MaxMind's GeoIP2 databases on a time-based schedule. More info:
+Download and update MaxMind's GeoIP2 databases on a time-based schedule. More info:
 https://github.com/crazy-max/geoip-updater
 
 Flags:

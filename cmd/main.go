@@ -24,7 +24,7 @@ func main() {
 	// Parse command line
 	_ = kong.Parse(&cli,
 		kong.Name("geoip-updater"),
-		kong.Description(`Download MaxMind's GeoIP2 databases on a time-based schedule. More info: https://github.com/crazy-max/geoip-updater`),
+		kong.Description(`Download and update MaxMind's GeoIP2 databases on a time-based schedule. More info: https://github.com/crazy-max/geoip-updater`),
 		kong.UsageOnError(),
 		kong.Vars{
 			"version": fmt.Sprintf("%s", version),

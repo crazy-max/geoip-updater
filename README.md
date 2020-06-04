@@ -3,9 +3,9 @@
 <p align="center">
   <a href="https://github.com/crazy-max/geoip-updater/releases/latest"><img src="https://img.shields.io/github/release/crazy-max/geoip-updater.svg?style=flat-square" alt="GitHub release"></a>
   <a href="https://github.com/crazy-max/geoip-updater/releases/latest"><img src="https://img.shields.io/github/downloads/crazy-max/geoip-updater/total.svg?style=flat-square" alt="Total downloads"></a>
-  <a href="https://github.com/crazy-max/geoip-updater/actions"><img src="https://github.com/crazy-max/geoip-updater/workflows/build/badge.svg" alt="Build Status"></a>
-  <a href="https://hub.docker.com/r/crazymax/geoip-updater/"><img src="https://img.shields.io/docker/stars/crazymax/geoip-updater.svg?style=flat-square" alt="Docker Stars"></a>
-  <a href="https://hub.docker.com/r/crazymax/geoip-updater/"><img src="https://img.shields.io/docker/pulls/crazymax/geoip-updater.svg?style=flat-square" alt="Docker Pulls"></a>
+  <a href="https://github.com/crazy-max/geoip-updater/actions?workflow=build"><img src="https://img.shields.io/github/workflow/status/crazy-max/geoip-updater/build?label=build&logo=github&style=flat-square" alt="Build Status"></a>
+  <a href="https://hub.docker.com/r/crazymax/geoip-updater/"><img src="https://img.shields.io/docker/stars/crazymax/geoip-updater.svg?style=flat-square&logo=docker" alt="Docker Stars"></a>
+  <a href="https://hub.docker.com/r/crazymax/geoip-updater/"><img src="https://img.shields.io/docker/pulls/crazymax/geoip-updater.svg?style=flat-square&logo=docker" alt="Docker Pulls"></a>
   <br /><a href="https://goreportcard.com/report/github.com/crazy-max/geoip-updater"><img src="https://goreportcard.com/badge/github.com/crazy-max/geoip-updater?style=flat-square" alt="Go Report"></a>
   <a href="https://www.codacy.com/app/crazy-max/geoip-updater"><img src="https://img.shields.io/codacy/grade/39bc1954d42b4b77b5efe7fe3c7b9a17.svg?style=flat-square" alt="Code Quality"></a>
   <a href="https://github.com/sponsors/crazy-max"><img src="https://img.shields.io/badge/sponsor-crazy--max-181717.svg?logo=github&style=flat-square" alt="Become a sponsor"></a>

@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:experimental
 FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.13-alpine as builder
 
 ARG BUILD_DATE
@@ -53,7 +52,7 @@ LABEL maintainer="CrazyMax" \
   org.opencontainers.image.revision=$VCS_REF \
   org.opencontainers.image.vendor="CrazyMax" \
   org.opencontainers.image.title="geoip-updater" \
-  org.opencontainers.image.description="Download MaxMind's GeoIP2 databases on a time-based schedule" \
+  org.opencontainers.image.description="Download and update MaxMind's GeoIP2 databases on a time-based schedule" \
   org.opencontainers.image.licenses="MIT"
 
 ENV EDITION_IDS="GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \

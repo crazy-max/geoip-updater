@@ -36,7 +36,7 @@ func Load(cli Cli, version string) (*Configuration, error) {
 		Cli: cli,
 		App: App{
 			Name:    "geoip-updater",
-			Desc:    "Download MaxMind's GeoIP2 databases on a time-based schedule",
+			Desc:    "Download and update MaxMind's GeoIP2 databases on a time-based schedule",
 			URL:     "https://github.com/crazy-max/geoip-updater",
 			Author:  "CrazyMax",
 			Version: version,
