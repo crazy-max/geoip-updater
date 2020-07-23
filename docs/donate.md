@@ -1,4 +1,4 @@
-**ddns-route53** :motorway: is free and open source and always will be.
+**geoip-updater** :globe_with_meridians: is free and open source and always will be.
 
 All kinds of contributions are welcome! The most basic way to show your support is to
 [star the project]({{ config.repo_rul }}), or to raise issues.

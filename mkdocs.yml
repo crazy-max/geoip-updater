@@ -26,8 +26,8 @@ theme:
   language: en
   palette:
     scheme: default
-    primary: blue
-    accent: blue
+    primary: blue grey
+    accent: blue grey
   font:
     text: Roboto
     code: Roboto Mono
