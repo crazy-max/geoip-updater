@@ -28,7 +28,7 @@ jobs:
           echo ::set-output name=build_tag::test
           echo ::set-output name=container_name::geoip-updater
           echo ::set-output name=running_timeout::120
-          echo ::set-output name=running_log_check::azazazazazaz
+          echo ::set-output name=running_log_check::GeoLite2-Country.mmdb database successfully updated
       -
         name: Docker Build
         run: |
@@ -40,6 +40,7 @@ jobs:
             -e "EDITION_IDS=GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
             -e "LICENSE_KEY=${{ secrets.LICENSE_KEY_NEW }}" \
             -e "DOWNLOAD_PATH=/data" \
+            -e "SCHEDULE=0 0 * * 0" \
             -e "LOG_LEVEL=info" \
             -e "LOG_JSON=false" \
             ${{ steps.prep.outputs.build_tag }}
