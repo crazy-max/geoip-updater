@@ -2,7 +2,13 @@
 
 ## About
 
-geoip-updater provides automatically updated Docker :whale: images within [Docker Hub](https://hub.docker.com/r/crazymax/geoip-updater).
+geoip-updater provides automatically updated Docker :whale: images within several registries:
+
+| Registry                                                                                         | Image                           |
+|--------------------------------------------------------------------------------------------------|---------------------------------|
+| [Docker Hub](https://hub.docker.com/r/crazymax/geoip-updater/)                             | `crazymax/geoip-updater`                 |
+| [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/geoip-updater)  | `ghcr.io/crazy-max/geoip-updater`        |
+
 It is possible to always use the latest stable tag or to use another service that handles updating Docker images.
 
 !!! note

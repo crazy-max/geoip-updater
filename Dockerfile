@@ -1,24 +1,12 @@
+FROM --platform=${BUILDPLATFORM:-linux/amd64} tonistiigi/xx:golang AS xgo
 FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.13-alpine as builder
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VERSION
+ARG VERSION=dev
 
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
-RUN printf "I am running on ${BUILDPLATFORM:-linux/amd64}, building for ${TARGETPLATFORM:-linux/amd64}\n$(uname -a)\n" \
-  && $(case ${TARGETPLATFORM:-linux/amd64} in \
-      "linux/amd64")   echo "GOOS=linux GOARCH=amd64" > /tmp/.env                       ;; \
-      "linux/arm/v6")  echo "GOOS=linux GOARCH=arm GOARM=6" > /tmp/.env                 ;; \
-      "linux/arm/v7")  echo "GOOS=linux GOARCH=arm GOARM=7" > /tmp/.env                 ;; \
-      "linux/arm64")   echo "GOOS=linux GOARCH=arm64" > /tmp/.env                       ;; \
-      "linux/386")     echo "GOOS=linux GOARCH=386" > /tmp/.env                         ;; \
-      "linux/ppc64le") echo "GOOS=linux GOARCH=ppc64le" > /tmp/.env                     ;; \
-      "linux/s390x")   echo "GOOS=linux GOARCH=s390x" > /tmp/.env                       ;; \
-      *)               echo "TARGETPLATFORM ${TARGETPLATFORM} not found..." && exit 1   ;; \
-    esac) \
-  && cat /tmp/.env
-RUN env $(cat /tmp/.env | xargs) go env
+ENV CGO_ENABLED 0
+ENV GO111MODULE on
+ENV GOPROXY https://goproxy.io,direct
+COPY --from=xgo / /
 
 RUN apk --update --no-cache add \
     build-base \
@@ -28,32 +16,18 @@ RUN apk --update --no-cache add \
 
 WORKDIR /app
 
-ENV GO111MODULE on
-ENV GOPROXY https://goproxy.io,direct
-COPY go.mod .
-COPY go.sum .
-RUN env $(cat /tmp/.env | xargs) go mod download
 COPY . ./
+RUN go mod download
 
-ARG VERSION=dev
-RUN env $(cat /tmp/.env | xargs) go build -ldflags "-w -s -X 'main.version=${VERSION}'" -v -o geoip-updater cmd/main.go
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+RUN go env
+RUN go build -ldflags "-w -s -X 'main.version=${VERSION}'" -v -o geoip-updater cmd/main.go
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:latest
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VERSION
-
-LABEL maintainer="CrazyMax" \
-  org.opencontainers.image.created=$BUILD_DATE \
-  org.opencontainers.image.url="https://github.com/crazy-max/geoip-updater" \
-  org.opencontainers.image.source="https://github.com/crazy-max/geoip-updater" \
-  org.opencontainers.image.version=$VERSION \
-  org.opencontainers.image.revision=$VCS_REF \
-  org.opencontainers.image.vendor="CrazyMax" \
-  org.opencontainers.image.title="geoip-updater" \
-  org.opencontainers.image.description="Download and update MaxMind's GeoIP2 databases on a time-based schedule" \
-  org.opencontainers.image.licenses="MIT"
+LABEL maintainer="CrazyMax"
 
 ENV EDITION_IDS="GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
   DOWNLOAD_PATH="/data"
