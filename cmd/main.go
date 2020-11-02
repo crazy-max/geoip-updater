@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
+	_ "time/tzdata"
 
 	"github.com/alecthomas/kong"
 	"github.com/crazy-max/geoip-updater/internal/app"
@@ -34,14 +34,8 @@ func main() {
 			Summary: true,
 		}))
 
-	// Load timezone location
-	location, err := time.LoadLocation(cli.Timezone)
-	if err != nil {
-		log.Panic().Err(err).Msgf("Cannot load timezone %s", cli.Timezone)
-	}
-
 	// Init
-	logging.Configure(&cli, location)
+	logging.Configure(&cli)
 	log.Info().Msgf("Starting geoip-updater %s", version)
 
 	// Handle os signals
@@ -61,7 +55,7 @@ func main() {
 	}
 
 	// Init
-	if geoipupd, err = app.New(cfg, location); err != nil {
+	if geoipupd, err = app.New(cfg); err != nil {
 		log.Fatal().Err(err).Msg("Cannot initialize geoip-updater")
 	}
 

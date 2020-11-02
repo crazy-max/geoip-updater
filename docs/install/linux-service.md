@@ -19,12 +19,13 @@ RestartSec=2s
 Type=simple
 User=geoip-updater
 Group=geoip-updater
+ExecStart=/usr/local/bin/geoip-updater --log-level info
+Restart=always
+#Environment=TZ=Europe/Paris
 Environment=EDITION_IDS=GeoLite2-ASN,GeoLite2-City,GeoLite2-Country
 Environment=LICENSE_KEY=0123456789ABCD
 Environment=DOWNLOAD_PATH=/usr/local/share/geoip
 Environment=SCHEDULE=0 0 * * 0
-ExecStart=/usr/local/bin/geoip-updater --log-level info
-Restart=always
 
 [Install]
 WantedBy=multi-user.target

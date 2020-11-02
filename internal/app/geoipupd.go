@@ -18,7 +18,6 @@ import (
 // Client represents an active geoip-updater object
 type Client struct {
 	cfg    *config.Configuration
-	loc    *time.Location
 	cron   *cron.Cron
 	mm     *maxmind.Client
 	eids   []maxmind.EditionID
@@ -27,7 +26,7 @@ type Client struct {
 }
 
 // New creates new geoip-updater instance
-func New(cfg *config.Configuration, loc *time.Location) (*Client, error) {
+func New(cfg *config.Configuration) (*Client, error) {
 	// Check edition IDs
 	var eids []maxmind.EditionID
 	for _, eidStr := range cfg.Cli.EditionIDs {
@@ -50,9 +49,8 @@ func New(cfg *config.Configuration, loc *time.Location) (*Client, error) {
 
 	return &Client{
 		cfg: cfg,
-		loc: loc,
-		cron: cron.New(cron.WithLocation(loc), cron.WithParser(cron.NewParser(
-			cron.SecondOptional|cron.Minute|cron.Hour|cron.Dom|cron.Month|cron.Dow|cron.Descriptor),
+		cron: cron.New(cron.WithParser(cron.NewParser(
+			cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor),
 		)),
 		mm:   mmcli,
 		eids: eids,

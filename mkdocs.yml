@@ -82,6 +82,7 @@ nav:
     - Prerequisites: usage/prerequisites.md
     - Command line: usage/cli.md
     - Examples: usage/examples.md
+  - FAQ: faq.md
   - Changelog: changelog.md
   - Reporting an issue: reporting-issue.md
   - Contributing: contributing.md

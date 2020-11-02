@@ -25,7 +25,6 @@ Flags:
       --download-path=./          Directory where databases will be stored
                                   ($DOWNLOAD_PATH).
       --schedule=0 0 * * 0        CRON expression format ($SCHEDULE).
-      --timezone="UTC"            Timezone assigned to geoip-updater ($TZ).
       --log-level="info"          Set log level ($LOG_LEVEL).
       --log-json                  Enable JSON logging output ($LOG_JSON).
       --log-caller                Add file:line of the caller to log output
@@ -42,7 +41,6 @@ Following environment variables can be used in place:
 | `LICENSE_KEY`      |               | [MaxMind License Key](prerequisites.md#license-key) in order to download databases |
 | `DOWNLOAD_PATH`    | _working dir_ | Directory where databases will be stored |
 | `SCHEDULE`         |               | [CRON expression](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format) to schedule geoip-updater |
-| `TZ`               | `UTC`         | Timezone assigned |
 | `LOG_LEVEL`        | `info`        | Log level output |
 | `LOG_JSON`         | `false`       | Enable JSON logging output |
 | `LOG_CALLER`       | `false`       | Enable to add `file:line` of the caller |

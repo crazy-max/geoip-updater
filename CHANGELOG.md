@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 (2020/11/02)
+
+* Use embedded tzdata package
+* Remove `--timezone` flag
+* Docker image also available on [GitHub Container Registry](https://github.com/users/crazy-max/packages/container/package/geoip-updater)
+* Switch to Docker actions
+* Go 1.15
+* Update deps
+
 ## 1.0.1 (2020/05/06)
 
 * Remove unexpected log output

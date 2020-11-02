@@ -15,7 +15,6 @@ type Cli struct {
 	LicenseKey   string   `kong:"required,name='license-key',env='LICENSE_KEY',placeholder='0123456789',help='MaxMind License Key'"`
 	DownloadPath string   `kong:"name='download-path',env='DOWNLOAD_PATH',placeholder='./',help='Directory where databases will be stored.'"`
 	Schedule     string   `kong:"name='schedule',env='SCHEDULE',placeholder='0 0 * * 0',help='CRON expression format.'"`
-	Timezone     string   `kong:"name='timezone',env='TZ',default='UTC',help='Timezone assigned to geoip-updater.'"`
 	LogLevel     string   `kong:"name='log-level',env='LOG_LEVEL',default='info',help='Set log level.'"`
 	LogJSON      bool     `kong:"name='log-json',env='LOG_JSON',default='false',help='Enable JSON logging output.'"`
 	LogCaller    bool     `kong:"name='log-caller',env='LOG_CALLER',default='false',help='Add file:line of the caller to log output.'"`

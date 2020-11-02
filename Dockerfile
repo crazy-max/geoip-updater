@@ -1,5 +1,5 @@
 FROM --platform=${BUILDPLATFORM:-linux/amd64} tonistiigi/xx:golang AS xgo
-FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.13-alpine as builder
+FROM --platform=${BUILDPLATFORM:-linux/amd64} golang:1.15-alpine as builder
 
 ARG VERSION=dev
 
@@ -35,11 +35,9 @@ ENV EDITION_IDS="GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
 RUN apk --update --no-cache add \
     ca-certificates \
     libressl \
-    tzdata \
   && rm -rf /tmp/* /var/cache/apk/*
 
 COPY --from=builder /app/geoip-updater /usr/local/bin/geoip-updater
-COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
 RUN geoip-updater --version
 
 ENTRYPOINT [ "/usr/local/bin/geoip-updater" ]

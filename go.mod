@@ -1,6 +1,6 @@
 module github.com/crazy-max/geoip-updater
 
-go 1.13
+go 1.15
 
 require (
 	github.com/alecthomas/kong v0.2.11
