@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0 (2021/02/19)
+
+* Refactor CI and dev workflow with buildx bake (#54)
+  * Add `image-local` target
+  * Single job for artifacts and image
+  * Add `armv5`, `ppc64le` and `s390x` artifacts
+  * Upload artifacts
+  * Validate
+* Remove `linux/s390x` Docker platform support for now
+* Bump github.com/alecthomas/kong from 0.2.12 to 0.2.15 (#64)
+* Bump github.com/stretchr/testify from 1.6.1 to 1.7.0 (#58)
+* MkDocs Materials 6.2.8
+* Bump github.com/mholt/archiver/v3 from 3.3.2 to 3.5.0 (#47)
+
 ## 1.1.0 (2020/11/02)
 
 * Use embedded tzdata package
