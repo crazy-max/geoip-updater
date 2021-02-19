@@ -42,7 +42,9 @@ func createFile(path string, content string) error {
 		return err
 	}
 	defer file.Close()
-	_, err = file.WriteString(content)
+	if _, err = file.WriteString(content); err != nil {
+		return err
+	}
 	if err = file.Sync(); err != nil {
 		return err
 	}

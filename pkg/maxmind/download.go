@@ -111,20 +111,6 @@ func (d *Downloader) expectedHash() (string, error) {
 	return string(md5), nil
 }
 
-func (d *Downloader) currentHash() (string, error) {
-	md5file := path.Join(d.workDir, fmt.Sprintf(".%s.%s", d.eid.Filename(), "md5"))
-	if _, err := os.Stat(md5file); os.IsNotExist(err) {
-		return "", nil
-	} else if err != nil {
-		return "", err
-	}
-	curHash, err := ioutil.ReadFile(md5file)
-	if err != nil {
-		return "", errors.Wrap(err, "Cannot read current archive hash")
-	}
-	return string(curHash), nil
-}
-
 func (d *Downloader) downloadArchive(expHash string, archive string) error {
 	if _, err := os.Stat(archive); err == nil {
 		curHash, err := checksumFromFile(archive)

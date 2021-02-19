@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -27,7 +26,7 @@ func main() {
 		kong.Description(`Download and update MaxMind's GeoIP2 databases on a time-based schedule. More info: https://github.com/crazy-max/geoip-updater`),
 		kong.UsageOnError(),
 		kong.Vars{
-			"version": fmt.Sprintf("%s", version),
+			"version": version,
 		},
 		kong.ConfigureHelp(kong.HelpOptions{
 			Compact: true,
