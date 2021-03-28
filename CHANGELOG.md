@@ -1,13 +1,22 @@
 # Changelog
 
+## 1.3.0 (2021/03/28)
+
+* Bump github.com/rs/zerolog from 1.20.0 to 1.21.0 (#69)
+* Docker meta v2 (#70)
+* Deploy docs on workflow dispatch or tag
+* Bump github.com/alecthomas/kong from 0.2.15 to 0.2.16 (#68)
+* Go 1.16 (#67)
+* Switch to goreleaser-xx (#66)
+
 ## 1.2.0 (2021/02/19)
 
 * Refactor CI and dev workflow with buildx bake (#54)
-  * Add `image-local` target
-  * Single job for artifacts and image
-  * Add `armv5`, `ppc64le` and `s390x` artifacts
-  * Upload artifacts
-  * Validate
+    * Add `image-local` target
+    * Single job for artifacts and image
+    * Add `armv5`, `ppc64le` and `s390x` artifacts
+    * Upload artifacts
+    * Validate
 * Remove `linux/s390x` Docker platform support for now
 * Bump github.com/alecthomas/kong from 0.2.12 to 0.2.15 (#64)
 * Bump github.com/stretchr/testify from 1.6.1 to 1.7.0 (#58)
