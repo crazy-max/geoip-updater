@@ -57,27 +57,27 @@ services:
 Edit this example with your preferences and run the following commands to bring up geoip-updater:
 
 ```shell
-$ docker-compose up -d
-$ docker-compose logs -f
+docker-compose up -d
+docker-compose logs -f
 ```
 
 Or use the following command:
 
 ```shell
-$ docker run -d --name geoip-updater \
-    -e "EDITION_IDS=GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
-    -e "LICENSE_KEY=0123456789ABCD" \
-    -e "DOWNLOAD_PATH=/data" \
-    -e "SCHEDULE=0 0 * * 0" \
-    -e "LOG_LEVEL=info" \
-    -e "LOG_JSON=false" \
-    -v "$(pwd)/data:/data" \
-    crazymax/geoip-updater:latest
+docker run -d --name geoip-updater \
+  -e "EDITION_IDS=GeoLite2-ASN,GeoLite2-City,GeoLite2-Country" \
+  -e "LICENSE_KEY=0123456789ABCD" \
+  -e "DOWNLOAD_PATH=/data" \
+  -e "SCHEDULE=0 0 * * 0" \
+  -e "LOG_LEVEL=info" \
+  -e "LOG_JSON=false" \
+  -v "$(pwd)/data:/data" \
+  crazymax/geoip-updater:latest
 ```
 
 To upgrade your installation to the latest release:
 
 ```shell
-$ docker-compose pull
-$ docker-compose up -d
+docker-compose pull
+docker-compose up -d
 ```

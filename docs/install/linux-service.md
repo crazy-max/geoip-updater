@@ -36,12 +36,12 @@ Change the user, group, and other required startup values following your needs.
 Enable and start geoip-updater at boot:
 
 ```shell
-$ sudo systemctl enable geoip-updater
-$ sudo systemctl start geoip-updater
+sudo systemctl enable geoip-updater
+sudo systemctl start geoip-updater
 ```
 
 To view logs:
 
 ```shell
-$ journalctl -fu geoip-updater.service
+journalctl -fu geoip-updater.service
 ```

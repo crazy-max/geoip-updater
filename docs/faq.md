@@ -8,5 +8,5 @@ Cron schedule may also override the timezone to be interpreted in by providing a
 at the beginning of the cron spec, of the form `CRON_TZ=<timezone>`:
 
 ```shell
-$ geoip-updater --schedule "CRON_TZ=Asia/Tokyo */30 * * * *"
+geoip-updater --schedule "CRON_TZ=Asia/Tokyo */30 * * * *"
 ```

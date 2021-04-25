@@ -3,7 +3,7 @@
 ## Usage
 
 ```shell
-$ geoip-updater [options]
+geoip-updater [options]
 ```
 
 ## Options
