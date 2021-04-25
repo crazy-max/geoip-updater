@@ -6,6 +6,7 @@ geoip-updater binaries are available on [releases]({{ config.repo_url }}releases
 
 Choose the archive matching the destination platform:
 
+* [`geoip-updater_{{ git.tag | trim('v') }}_darwin_arm64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_darwin_arm64.tar.gz)
 * [`geoip-updater_{{ git.tag | trim('v') }}_darwin_x86_64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_darwin_x86_64.tar.gz)
 * [`geoip-updater_{{ git.tag | trim('v') }}_freebsd_i386.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_freebsd_i386.tar.gz)
 * [`geoip-updater_{{ git.tag | trim('v') }}_freebsd_x86_64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_freebsd_x86_64.tar.gz)
