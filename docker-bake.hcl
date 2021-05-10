@@ -14,8 +14,8 @@ target "go-version" {
   }
 }
 
-// Special target: https://github.com/crazy-max/ghaction-docker-meta#bake-definition
-target "ghaction-docker-meta" {
+// Special target: https://github.com/docker/metadata-action#bake-definition
+target "docker-metadata-action" {
   tags = ["crazymax/geoip-updater:local"]
 }
 
@@ -89,7 +89,7 @@ target "artifact-all" {
 }
 
 target "image" {
-  inherits = ["go-version", "ghaction-docker-meta"]
+  inherits = ["go-version", "docker-metadata-action"]
 }
 
 target "image-local" {
