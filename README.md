@@ -1,7 +1,7 @@
 <p align="center"><a href="https://github.com/crazy-max/geoip-updater" target="_blank"><img height="128" src="https://raw.githubusercontent.com/crazy-max/geoip-updater/master/.github/geoip-updater.png"></a></p>
 
 <p align="center">
-  <a href="https://crazy-max.github.io/geoip-updater/"><img src="https://img.shields.io/badge/doc-mkdocs-02a6f2?style=flat-square&logo=read-the-docs" alt="Documentation"></a>
+  <a href="https://crazymax.dev/geoip-updater/"><img src="https://img.shields.io/badge/doc-mkdocs-02a6f2?style=flat-square&logo=read-the-docs" alt="Documentation"></a>
   <a href="https://github.com/crazy-max/geoip-updater/releases/latest"><img src="https://img.shields.io/github/release/crazy-max/geoip-updater.svg?style=flat-square" alt="GitHub release"></a>
   <a href="https://github.com/crazy-max/geoip-updater/releases/latest"><img src="https://img.shields.io/github/downloads/crazy-max/geoip-updater/total.svg?style=flat-square" alt="Total downloads"></a>
   <a href="https://github.com/crazy-max/geoip-updater/actions?workflow=build"><img src="https://img.shields.io/github/workflow/status/crazy-max/geoip-updater/build?label=build&logo=github&style=flat-square" alt="Build Status"></a>
@@ -24,7 +24,7 @@
 
 ## Documentation
 
-Documentation can be found on https://crazy-max.github.io/geoip-updater/
+Documentation can be found on https://crazymax.dev/geoip-updater/
 
 ## How can I help?
 
