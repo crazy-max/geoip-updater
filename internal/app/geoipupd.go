@@ -79,7 +79,7 @@ func (c *Client) Start() error {
 	// Start scheduler
 	c.cron.Start()
 	log.Info().Msgf("Next run in %s (%s)",
-		durafmt.ParseShort(time.Until(c.cron.Entry(c.jobID).Next)).String(),
+		durafmt.Parse(time.Until(c.cron.Entry(c.jobID).Next)).LimitFirstN(2).String(),
 		c.cron.Entry(c.jobID).Next)
 
 	select {}
@@ -94,7 +94,7 @@ func (c *Client) Run() {
 	defer atomic.StoreUint32(&c.locker, 0)
 	if c.jobID > 0 {
 		defer log.Info().Msgf("Next run in %s (%s)",
-			durafmt.ParseShort(time.Until(c.cron.Entry(c.jobID).Next)).String(),
+			durafmt.Parse(time.Until(c.cron.Entry(c.jobID).Next)).LimitFirstN(2).String(),
 			c.cron.Entry(c.jobID).Next)
 	}
 
