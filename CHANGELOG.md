@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.0 (2021/09/05)
+
+* Go 1.17 (#82)
+* Add `linux/rsicv64`, `darwin/arm64`, `windows/arm64` artifacts
+* MkDocs Materials 7.2.6
+* Wrong remaining time displayed
+* Alpine Linux 3.14
+* Bump github.com/ulikunitz/xz to v0.5.8
+* Bump github.com/rs/zerolog from 1.21.0 to 1.24.0 (#78 #80 #83)
+* Bump github.com/alecthomas/kong from 0.2.16 to 0.2.17 (#79)
+* Bump codecov/codecov-action from 1 to 2
+
 ## 1.3.0 (2021/03/28)
 
 * Bump github.com/rs/zerolog from 1.20.0 to 1.21.0 (#69)
