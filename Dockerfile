@@ -30,7 +30,7 @@ COPY --from=build /out/*.zip /
 
 FROM alpine:3.14
 
-RUN apk --update --no-cache add ca-certificates openssh
+RUN apk --update --no-cache add ca-certificates openssl
 COPY --from=build /usr/local/bin/geoip-updater /usr/local/bin/geoip-updater
 RUN geoip-updater --version
 
