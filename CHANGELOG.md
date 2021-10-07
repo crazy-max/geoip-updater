@@ -3,7 +3,7 @@
 ## 1.4.0 (2021/09/05)
 
 * Go 1.17 (#82)
-* Add `linux/rsicv64`, `darwin/arm64`, `windows/arm64` artifacts
+* Add `linux/riscv64`, `darwin/arm64`, `windows/arm64` artifacts
 * MkDocs Materials 7.2.6
 * Wrong remaining time displayed
 * Alpine Linux 3.14
