@@ -1,5 +1,5 @@
-github.com/alecthomas/kong v0.2.18 h1:H05f55eRO5f9gusObxgjpqKtozJNvniqMTuOPnf+2SQ=
-github.com/alecthomas/kong v0.2.18/go.mod h1:ka3VZ8GZNPXv9Ov+j4YNLkI8mTuhXyr/0ktSlqIydQQ=
+github.com/alecthomas/kong v0.2.19 h1:qBDfByO5XgWUXyNB4D6OOhGh5Z1eNOwWayDPQJFNWdc=
+github.com/alecthomas/kong v0.2.19/go.mod h1:ka3VZ8GZNPXv9Ov+j4YNLkI8mTuhXyr/0ktSlqIydQQ=
 github.com/andybalholm/brotli v1.0.1 h1:KqhlKozYbRtJvsPrrEeXcO+N2l6NYT5A2QAFmSULpEc=
 github.com/andybalholm/brotli v1.0.1/go.mod h1:loMXtMfwqflxFJPmdbJO0a3KNoPuLBgiu3qAvBg8x/Y=
 github.com/coreos/go-systemd/v22 v22.3.2/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
