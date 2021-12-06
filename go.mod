@@ -3,7 +3,7 @@ module github.com/crazy-max/geoip-updater
 go 1.17
 
 require (
-	github.com/alecthomas/kong v0.2.18
+	github.com/alecthomas/kong v0.2.20
 	github.com/docker/go-units v0.4.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/mholt/archiver/v3 v3.5.1
