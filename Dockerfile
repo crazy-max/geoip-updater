@@ -28,7 +28,7 @@ EOT
 FROM scratch AS test-coverage
 COPY --from=test /tmp/coverage.txt /coverage.txt
 
-FROM base AS build
+FROM vendored AS build
 ARG TARGETPLATFORM
 RUN --mount=type=bind,target=/src,rw \
   --mount=type=cache,target=/root/.cache \
