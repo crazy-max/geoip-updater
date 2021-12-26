@@ -47,7 +47,7 @@ func New(config Config) (*Client, error) {
 		workBaseDir = os.TempDir()
 	}
 	workDir := path.Join(workBaseDir, ".geoip-updater")
-	if err := os.MkdirAll(workDir, 0755); err != nil {
+	if err := os.MkdirAll(workDir, 0o755); err != nil {
 		return nil, errors.Wrap(err, "Cannot create work directory")
 	}
 	if err := isDirWriteable(workDir); err != nil {

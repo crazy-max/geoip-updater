@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -53,7 +52,7 @@ func createFile(path string, content string) error {
 
 func isDirWriteable(dir string) error {
 	f := filepath.Join(dir, ".touch")
-	if err := ioutil.WriteFile(f, []byte(""), 0600); err != nil {
+	if err := os.WriteFile(f, []byte(""), 0o600); err != nil {
 		return err
 	}
 	return os.Remove(f)

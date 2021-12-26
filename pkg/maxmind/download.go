@@ -3,7 +3,6 @@ package maxmind
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -34,7 +33,7 @@ func (c *Client) NewDownloader(eid EditionID, dlDir string) (*Downloader, error)
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot get absolute path of download directory")
 	}
-	if err := os.MkdirAll(dlDir, 0755); err != nil {
+	if err := os.MkdirAll(dlDir, 0o755); err != nil {
 		return nil, errors.Wrap(err, "Cannot create download directory")
 	}
 	if err := isDirWriteable(dlDir); err != nil {
@@ -103,7 +102,7 @@ func (d *Downloader) expectedHash() (string, error) {
 		return "", errors.Errorf("Received invalid status code %d: %s", res.StatusCode, res.Body)
 	}
 
-	md5, err := ioutil.ReadAll(res.Body)
+	md5, err := io.ReadAll(res.Body)
 	if err != nil {
 		return "", errors.Wrap(err, "Cannot download MD5 file")
 	}
