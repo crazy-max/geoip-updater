@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.0 (2021/12/26)
+
+* Fix checksum URL (#94)
+* Move from io/ioutil to io and os packages
+* Move syscall to golang.org/x/sys
+* Enhance dockerfiles (#93)
+* Bump github.com/rs/zerolog from 1.25.0 to 1.26.0 (#86)
+* Bump github.com/mholt/archiver/v3 from 3.5.0 to 3.5.1 (#85)
+* Bump github.com/alecthomas/kong from 0.2.17 to 0.2.22 (#88 #91)
+* Bump github.com/rs/zerolog from 1.24.0 to 1.26.1 (#84 #92)
+
 ## 1.4.0 (2021/09/05)
 
 * Go 1.17 (#82)
