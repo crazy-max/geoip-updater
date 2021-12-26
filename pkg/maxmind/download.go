@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/docker/go-units"
 	"github.com/mholt/archiver/v3"
@@ -52,7 +53,7 @@ func (d *Downloader) Download() ([]os.FileInfo, error) {
 	// Retrieve expected hash
 	expHash, err := d.expectedHash()
 	if err != nil {
-		return nil, errors.Wrap(err, "Cannot get archive MD5 hash")
+		return nil, errors.Wrap(err, "Cannot get archive checksum")
 	}
 
 	// Download DB archive
@@ -61,10 +62,10 @@ func (d *Downloader) Download() ([]os.FileInfo, error) {
 		return nil, err
 	}
 
-	// Create MD5 file
-	md5file := path.Join(d.workDir, fmt.Sprintf(".%s.%s", d.eid.Filename(), "md5"))
-	if err := createFile(md5file, expHash); err != nil {
-		return nil, errors.Errorf("Cannot create MD5 file %s", md5file)
+	// Create checksum file
+	checksumFile := path.Join(d.workDir, fmt.Sprintf(".%s.%s", d.eid.Filename(), "sha256"))
+	if err := createFile(checksumFile, expHash); err != nil {
+		return nil, errors.Errorf("Cannot create checksum file %s", checksumFile)
 	}
 
 	// Extract DB from archive
@@ -85,7 +86,7 @@ func (d *Downloader) expectedHash() (string, error) {
 	q := req.URL.Query()
 	q.Add("license_key", d.licenseKey)
 	q.Add("edition_id", d.eid.String())
-	q.Add("suffix", fmt.Sprintf("%s.md5", d.eid.Suffix().String()))
+	q.Add("suffix", fmt.Sprintf("%s.sha256", d.eid.Suffix().String()))
 	req.URL.RawQuery = q.Encode()
 
 	if d.userAgent != "" {
@@ -102,12 +103,17 @@ func (d *Downloader) expectedHash() (string, error) {
 		return "", errors.Errorf("Received invalid status code %d: %s", res.StatusCode, res.Body)
 	}
 
-	md5, err := io.ReadAll(res.Body)
+	checksum, err := io.ReadAll(res.Body)
 	if err != nil {
-		return "", errors.Wrap(err, "Cannot download MD5 file")
+		return "", errors.Wrap(err, "Cannot download checksum file")
 	}
 
-	return string(md5), nil
+	checksumAr := strings.SplitN(strings.TrimSpace(string(checksum)), " ", 2)
+	if len(checksumAr[0]) != 64 {
+		return "", errors.Errorf("Invalid checksum: %s", checksum)
+	}
+
+	return checksumAr[0], nil
 }
 
 func (d *Downloader) downloadArchive(expHash string, archive string) error {
@@ -171,7 +177,7 @@ func (d *Downloader) downloadArchive(expHash string, archive string) error {
 	}
 
 	if expHash != curHash {
-		return errors.Errorf("MD5 of downloaded archive (%s) does not match expected md5 (%s)", curHash, expHash)
+		return errors.Errorf("Checksum of downloaded archive (%s) does not match the expected one (%s)", curHash, expHash)
 	}
 
 	return nil
