@@ -3,13 +3,13 @@ package main
 import (
 	"os"
 	"os/signal"
-	"syscall"
 	_ "time/tzdata"
 
 	"github.com/alecthomas/kong"
 	"github.com/crazy-max/geoip-updater/internal/app"
 	"github.com/crazy-max/geoip-updater/internal/config"
 	"github.com/crazy-max/geoip-updater/internal/logging"
+	"github.com/crazy-max/geoip-updater/pkg/utl"
 	"github.com/rs/zerolog/log"
 )
 
@@ -39,7 +39,7 @@ func main() {
 
 	// Handle os signals
 	channel := make(chan os.Signal)
-	signal.Notify(channel, os.Interrupt, syscall.SIGTERM)
+	signal.Notify(channel, os.Interrupt, utl.SIGTERM)
 	go func() {
 		sig := <-channel
 		geoipupd.Close()
