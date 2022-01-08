@@ -100,7 +100,7 @@ func (d *Downloader) expectedHash() (string, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return "", errors.Errorf("Received invalid status code %d: %s", res.StatusCode, res.Body)
+		return "", errors.Errorf("Received invalid status code %d", res.StatusCode)
 	}
 
 	checksum, err := io.ReadAll(res.Body)
@@ -157,7 +157,7 @@ func (d *Downloader) downloadArchive(expHash string, archive string) error {
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return errors.Errorf("Received invalid status code %d: %s", res.StatusCode, res.Body)
+		return errors.Errorf("Received invalid status code %d", res.StatusCode)
 	}
 
 	out, err := os.Create(archive)
