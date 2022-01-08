@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0 (2022/01/08)
+
+* Alpine Linux 3.15
+* Bump github.com/alecthomas/kong from 0.2.22 to 0.3.0 (#95)
+
 ## 1.5.0 (2021/12/26)
 
 * Fix checksum URL (#94)
