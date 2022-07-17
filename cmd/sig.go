@@ -1,7 +1,7 @@
 //go:build !windows
 // +build !windows
 
-package utl
+package main
 
 import (
 	"golang.org/x/sys/unix"
