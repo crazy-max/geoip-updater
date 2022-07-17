@@ -51,7 +51,7 @@ COPY --from=build /out/*.zip /
 FROM scratch AS binary
 COPY --from=build /usr/local/bin/geoip-updater* /
 
-FROM alpine:3.15
+FROM alpine:3.16
 RUN apk --update --no-cache add ca-certificates openssl
 COPY --from=build /usr/local/bin/geoip-updater /usr/local/bin/geoip-updater
 ENTRYPOINT [ "geoip-updater" ]
