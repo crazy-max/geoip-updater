@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.7.0 (2022/07/17)
+
+* Go 1.18 (#120)
+* Alpine Linux 3.16 (#122)
+* MkDocs Material 8.3.9 (#123)
+* Bump github.com/rs/zerolog from 1.26.1 to 1.27.0 (#114)
+* Bump github.com/stretchr/testify from 1.7.0 to 1.8.0 (#101 #119)
+* Bump github.com/alecthomas/kong from 0.3.0 to 0.6.1 (#100 #116)
+
 ## 1.6.0 (2022/01/08)
 
 * Alpine Linux 3.15
