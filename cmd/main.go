@@ -9,7 +9,6 @@ import (
 	"github.com/crazy-max/geoip-updater/internal/app"
 	"github.com/crazy-max/geoip-updater/internal/config"
 	"github.com/crazy-max/geoip-updater/internal/logging"
-	"github.com/crazy-max/geoip-updater/pkg/utl"
 	"github.com/rs/zerolog/log"
 )
 
@@ -38,8 +37,8 @@ func main() {
 	log.Info().Msgf("Starting geoip-updater %s", version)
 
 	// Handle os signals
-	channel := make(chan os.Signal)
-	signal.Notify(channel, os.Interrupt, utl.SIGTERM)
+	channel := make(chan os.Signal, 1)
+	signal.Notify(channel, os.Interrupt, SIGTERM)
 	go func() {
 		sig := <-channel
 		geoipupd.Close()
