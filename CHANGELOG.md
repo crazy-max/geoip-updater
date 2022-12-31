@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.8.0 (2022/12/31)
+
+* Go 1.19 (#128)
+* Alpine Linux 3.17 (#133)
+* Enhance workflow (#129)
+* Bump github.com/rs/zerolog from 1.27.0 to 1.28.0 (#125)
+* Bump github.com/docker/go-units from 0.4.0 to 0.5.0 (#126)
+* Bump github.com/stretchr/testify from 1.8.0 to 1.8.1 (#130)
+* Bump github.com/alecthomas/kong from 0.6.1 to 0.7.1 (#132)
+* Bump golang.org/x/sys to 0.3.0 (#134)
+
 ## 1.7.0 (2022/07/17)
 
 * Go 1.18 (#120)
