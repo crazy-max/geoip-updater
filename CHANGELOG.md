@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.9.0 (2023/12/17)
+
+* Go 1.21 (#153)
+* Bump github.com/alecthomas/kong from 0.7.1 to 0.8.1 (#154)
+* Bump github.com/rs/zerolog from 1.28.0 to 1.31.0 (#143 #155)
+* Bump github.com/stretchr/testify from 1.8.1 to 1.8.4 (#138 #146)
+* Bump golang.org/x/sys from 0.3.0 to 0.11.0 (#142 #151)
+
 ## 1.8.0 (2022/12/31)
 
 * Go 1.19 (#128)
