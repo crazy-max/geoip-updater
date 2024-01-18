@@ -9,6 +9,10 @@ type EditionID string
 
 // Edition ID enum
 const (
+	EIDGeoIP2City         = EditionID("GeoIP2-City")
+	EIDGeoIP2CityCSV      = EditionID("GeoIP2-City-CSV")
+	EIDGeoIP2Country      = EditionID("GeoIP2-Country")
+	EIDGeoIP2CountryCSV   = EditionID("GeoIP2-Country-CSV")
 	EIDGeoLite2ASN        = EditionID("GeoLite2-ASN")
 	EIDGeoLite2ASNCSV     = EditionID("GeoLite2-ASN-CSV")
 	EIDGeoLite2City       = EditionID("GeoLite2-City")
@@ -20,6 +24,10 @@ const (
 // GetEditionID returns an edition ID from string
 func GetEditionID(eidStr string) (EditionID, error) {
 	eids := []EditionID{
+		EIDGeoIP2City,
+		EIDGeoIP2CityCSV,
+		EIDGeoIP2Country,
+		EIDGeoIP2CountryCSV,
 		EIDGeoLite2ASN,
 		EIDGeoLite2ASNCSV,
 		EIDGeoLite2City,
@@ -38,6 +46,14 @@ func GetEditionID(eidStr string) (EditionID, error) {
 // Suffix returns the suffix linked of an edition ID
 func (eid EditionID) Suffix() Suffix {
 	switch eid {
+	case EIDGeoIP2City:
+		return SfxTarGz
+	case EIDGeoIP2CityCSV:
+		return SfxZip
+	case EIDGeoIP2Country:
+		return SfxTarGz
+	case EIDGeoIP2CountryCSV:
+		return SfxZip
 	case EIDGeoLite2ASN:
 		return SfxTarGz
 	case EIDGeoLite2ASNCSV:
