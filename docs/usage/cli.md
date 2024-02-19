@@ -33,14 +33,14 @@ Flags:
 
 ## Environment variables
 
-Following environment variables can be used in place:
+The following environment variables can be used in place:
 
-| Name               | Default       | Description   |
-|--------------------|---------------|---------------|
-| `EDITION_IDS`      |               | Edition IDs list (comma separated) of MaxMind's GeoIP2 databases to fdownload. Currently supported edition IDs by geoip-updater are available [here](https://github.com/crazy-max/geoip-updater/blob/master/pkg/maxmind/editionid.go#L10-L18) |
-| `LICENSE_KEY`      |               | [MaxMind License Key](prerequisites.md#license-key) in order to download databases |
-| `DOWNLOAD_PATH`    | _working dir_ | Directory where databases will be stored |
-| `SCHEDULE`         |               | [CRON expression](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format) to schedule geoip-updater |
-| `LOG_LEVEL`        | `info`        | Log level output |
-| `LOG_JSON`         | `false`       | Enable JSON logging output |
-| `LOG_CALLER`       | `false`       | Enable to add `file:line` of the caller |
+| Name               | Default       | Description                                                                                                                                                                                                                                   |
+|--------------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `EDITION_IDS`      |               | Edition IDs list (comma separated) of MaxMind's GeoIP2 databases to fdownload. Currently supported edition IDs by geoip-updater are available [here](https://github.com/crazy-max/geoip-updater/blob/master/pkg/maxmind/editionid.go#L12-L21) |
+| `LICENSE_KEY`      |               | [MaxMind License Key](prerequisites.md#license-key) in order to download databases                                                                                                                                                            |
+| `DOWNLOAD_PATH`    | _working dir_ | Directory where databases will be stored                                                                                                                                                                                                      |
+| `SCHEDULE`         |               | [CRON expression](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format) to schedule geoip-updater                                                                                                                              |
+| `LOG_LEVEL`        | `info`        | Log level output                                                                                                                                                                                                                              |
+| `LOG_JSON`         | `false`       | Enable JSON logging output                                                                                                                                                                                                                    |
+| `LOG_CALLER`       | `false`       | Enable to add `file:line` of the caller                                                                                                                                                                                                       |
