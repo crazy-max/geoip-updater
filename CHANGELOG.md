@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.10.0 (2024/03/10)
+
+* GeoIP2-City and GeoIP2-Country edition ids support (#170)
+* Generate sbom and provenance (#177)
+* Bump github.com/alecthomas/kong to 0.9.0 (#176)
+* Bump github.com/rs/zerolog to 1.32.0 (#172)
+* Bump github.com/stretchr/testify to 1.9.0 (#174)
+* Bump golang.org/x/sys to 0.18.0 (#169 #175)
+
 ## 1.9.0 (2023/12/17)
 
 * Go 1.21 (#153)
