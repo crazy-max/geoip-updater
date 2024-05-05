@@ -19,8 +19,7 @@
 [Docker image](https://hub.docker.com/r/crazymax/geoip-updater3/)) that lets you download and update
 [MaxMind](https://www.maxmind.com/)'s GeoIP2 databases on a time-based schedule.
 
-> **Note**
-> 
+> [!TIP] 
 > Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun)
 > project!
 
