@@ -2,6 +2,8 @@ package maxmind
 
 import (
 	"fmt"
+
+	"github.com/pkg/errors"
 )
 
 // EditionID represents the edition ID of a database
@@ -40,7 +42,7 @@ func GetEditionID(eidStr string) (EditionID, error) {
 			return eid, nil
 		}
 	}
-	return "", fmt.Errorf("invalid edition ID: %s", eidStr)
+	return "", errors.Errorf("invalid edition ID: %s", eidStr)
 }
 
 // Suffix returns the suffix linked of an edition ID

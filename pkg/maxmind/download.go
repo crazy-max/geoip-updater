@@ -78,7 +78,7 @@ func (d *Downloader) Download() ([]os.FileInfo, error) {
 }
 
 func (d *Downloader) expectedHash() (string, error) {
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/app/geoip_download", d.baseURL), nil)
+	req, err := http.NewRequestWithContext(d.ctx, "GET", fmt.Sprintf("%s/app/geoip_download", d.baseURL), nil)
 	if err != nil {
 		return "", errors.Wrap(err, "Request failed")
 	}
@@ -135,7 +135,7 @@ func (d *Downloader) downloadArchive(expHash string, archive string) error {
 		Str("edition_id", d.eid.String()).
 		Msgf("Downloading %s archive...", filepath.Base(archive))
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/app/geoip_download", d.baseURL), nil)
+	req, err := http.NewRequestWithContext(d.ctx, "GET", fmt.Sprintf("%s/app/geoip_download", d.baseURL), nil)
 	if err != nil {
 		return errors.Wrap(err, "Request failed")
 	}

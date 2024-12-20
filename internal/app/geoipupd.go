@@ -41,7 +41,7 @@ func New(cfg *config.Configuration) (*Client, error) {
 	mmcli, err := maxmind.New(maxmind.Config{
 		Logger:     log.Logger,
 		LicenseKey: cfg.Cli.LicenseKey,
-		UserAgent:  fmt.Sprintf("geoip-updater/%s go/%s %s", cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)),
+		UserAgent:  fmt.Sprintf("geoip-updater/%s go/%s %s", cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)), //nolint:staticcheck // ignoring "SA1019: strings.Title is deprecated", as for our use we don't need full unicode support
 	})
 	if err != nil {
 		return nil, err
