@@ -5,12 +5,11 @@ import (
 	"runtime"
 	"strings"
 	"sync/atomic"
-	"time"
 
 	"github.com/crazy-max/geoip-updater/internal/config"
 	"github.com/crazy-max/geoip-updater/pkg/maxmind"
 	"github.com/docker/go-units"
-	"github.com/hako/durafmt"
+	"github.com/dromara/carbon/v2"
 	"github.com/robfig/cron/v3"
 	"github.com/rs/zerolog/log"
 )
@@ -79,7 +78,7 @@ func (c *Client) Start() error {
 	// Start scheduler
 	c.cron.Start()
 	log.Info().Msgf("Next run in %s (%s)",
-		durafmt.Parse(time.Until(c.cron.Entry(c.jobID).Next)).LimitFirstN(2).String(),
+		carbon.CreateFromStdTime(c.cron.Entry(c.jobID).Next).DiffAbsInString(),
 		c.cron.Entry(c.jobID).Next)
 
 	select {}
@@ -94,7 +93,7 @@ func (c *Client) Run() {
 	defer atomic.StoreUint32(&c.locker, 0)
 	if c.jobID > 0 {
 		defer log.Info().Msgf("Next run in %s (%s)",
-			durafmt.Parse(time.Until(c.cron.Entry(c.jobID).Next)).LimitFirstN(2).String(),
+			carbon.CreateFromStdTime(c.cron.Entry(c.jobID).Next).DiffAbsInString(),
 			c.cron.Entry(c.jobID).Next)
 	}
 
