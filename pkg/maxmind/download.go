@@ -3,6 +3,7 @@ package maxmind
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path"
@@ -10,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/docker/go-units"
-	"github.com/mholt/archiver/v3"
+	"github.com/mholt/archives"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"
 )
@@ -185,11 +186,27 @@ func (d *Downloader) downloadArchive(expHash string, archive string) error {
 
 func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 	var dbs []os.FileInfo
-	err := archiver.Walk(archive, func(f archiver.File) error {
-		if f.IsDir() {
+
+	fsys, err := archives.FileSystem(d.ctx, archive, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	err = fs.WalkDir(fsys, ".", func(path string, de fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if de.IsDir() {
 			return nil
 		}
-		if filepath.Ext(f.Name()) != ".csv" && filepath.Ext(f.Name()) != ".mmdb" {
+
+		f, err := fsys.Open(path)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+
+		if filepath.Ext(de.Name()) != ".csv" && filepath.Ext(de.Name()) != ".mmdb" {
 			return nil
 		}
 
@@ -198,15 +215,20 @@ func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 			return err
 		}
 
+		fi, err := de.Info()
+		if err != nil {
+			return err
+		}
+
 		sublog := log.With().
 			Str("edition_id", d.eid.String()).
-			Str("db_name", f.Name()).
-			Str("db_size", units.HumanSize(float64(f.Size()))).
-			Time("db_modtime", f.ModTime()).
+			Str("db_name", fi.Name()).
+			Str("db_size", units.HumanSize(float64(fi.Size()))).
+			Time("db_modtime", fi.ModTime()).
 			Str("db_hash", expHash).
 			Logger()
 
-		dbpath := path.Join(d.dlDir, f.Name())
+		dbpath := filepath.Join(d.dlDir, fi.Name())
 		if fileExists(dbpath) {
 			curHash, err := checksumFromFile(dbpath)
 			if err != nil {
@@ -221,20 +243,20 @@ func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 		sublog.Debug().Msg("Extracting database")
 		dbfile, err := os.Create(dbpath)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("Cannot create database file %s", f.Name()))
+			return errors.Wrap(err, fmt.Sprintf("Cannot create database file %s", fi.Name()))
 		}
 		defer dbfile.Close()
 
 		_, err = io.Copy(dbfile, reader)
 		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("Cannot extract database file %s", f.Name()))
+			return errors.Wrap(err, fmt.Sprintf("Cannot extract database file %s", fi.Name()))
 		}
 
-		if err = os.Chtimes(dbpath, f.ModTime(), f.ModTime()); err != nil {
+		if err = os.Chtimes(dbpath, fi.ModTime(), fi.ModTime()); err != nil {
 			sublog.Warn().Err(err).Msg("Cannot preserve modtime of database file")
 		}
 
-		dbs = append(dbs, f)
+		dbs = append(dbs, fi)
 		return nil
 	})
 
