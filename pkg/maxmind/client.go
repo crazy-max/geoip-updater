@@ -1,6 +1,7 @@
 package maxmind
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 	"os"
@@ -12,6 +13,7 @@ import (
 
 // Client represents an active maxmind object
 type Client struct {
+	ctx        context.Context
 	log        zerolog.Logger
 	http       *http.Client
 	workDir    string
@@ -56,6 +58,7 @@ func New(config Config) (*Client, error) {
 	config.Logger.Debug().Msgf("Work directory is %s", workDir)
 
 	return &Client{
+		ctx:        context.Background(),
 		log:        config.Logger,
 		http:       http.DefaultClient,
 		workDir:    workDir,
