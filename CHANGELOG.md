@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.11.0 (2024/12/21)
+
+* Go 1.23 (#200)
+* Alpine Linux 3.21 (#200)
+* Switch to github.com/mholt/archives (#201)
+* Switch to github.com/dromara/carbon (#202)
+* Bump github.com/alecthomas/kong to 1.6.0 (#196)
+* Bump github.com/rs/zerolog to 1.33.0 (#183)
+* Bump github.com/stretchr/testify to 1.10.0 (#197)
+* Bump golang.org/x/sys to 0.28.0 (#184 #198)
+
 ## 1.10.0 (2024/03/10)
 
 * GeoIP2-City and GeoIP2-Country edition ids support (#170)
