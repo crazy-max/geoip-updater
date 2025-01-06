@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/kong v1.6.0
 	github.com/docker/go-units v0.5.0
 	github.com/dromara/carbon/v2 v2.5.2
-	github.com/mholt/archives v0.0.0-20241216060121-23e0af8fe73d
+	github.com/mholt/archives v0.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.33.0
