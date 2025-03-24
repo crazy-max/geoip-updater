@@ -9,7 +9,7 @@ require (
 	github.com/mholt/archives v0.0.0-20241216060121-23e0af8fe73d
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/rs/zerolog v1.33.0
+	github.com/rs/zerolog v1.34.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/sys v0.28.0
 )
