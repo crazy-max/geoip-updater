@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.12.0 (2025/12/30)
+
+* Go 1.25 (#224)
+* Alpine Linux 3.23 (#225)
+* Bump github.com/alecthomas/kong to 1.13.0 (#220)
+* Bump github.com/dromara/carbon/v2 to 2.6.15 (#219)
+* Bump github.com/mholt/archives to 0.1.5 (#221)
+* Bump github.com/rs/zerolog to 1.34.0 (#217)
+* Bump golang.org/x/sys to 0.39.0 (#215)
+
 ## 1.11.0 (2024/12/21)
 
 * Go 1.23 (#200)
