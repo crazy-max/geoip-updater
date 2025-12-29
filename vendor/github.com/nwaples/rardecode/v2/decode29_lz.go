@@ -1,5 +1,7 @@
 package rardecode
 
+import "io"
+
 const (
 	mainSize      = 299
 	offsetSize    = 60
@@ -47,13 +49,9 @@ type lz29Decoder struct {
 }
 
 func (d *lz29Decoder) reset() {
-	for i := range d.offset {
-		d.offset[i] = 0
-	}
+	clear(d.offset[:])
 	d.length = 0
-	for i := range d.codeLength {
-		d.codeLength[i] = 0
-	}
+	clear(d.codeLength[:])
 }
 
 func (d *lz29Decoder) init(br *rarBitReader) error {
@@ -106,7 +104,7 @@ func (d *lz29Decoder) readFilterData() (b []byte, err error) {
 
 	buf := make([]byte, n+1)
 	buf[0] = byte(flags)
-	err = d.br.readFull(buf[1:])
+	_, err = io.ReadFull(d.br, buf[1:])
 
 	return buf, err
 }

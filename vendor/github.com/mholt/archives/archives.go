@@ -57,7 +57,7 @@ func (f FileInfo) Stat() (fs.FileInfo, error) { return f.FileInfo, nil }
 // archive recursively, rooted at the named directory. They should use the
 // platform's path separator (backslash on Windows; slash on everything else).
 // For convenience, map keys that end in a separator ('/', or '\' on Windows)
-// will enumerate contents only without adding the folder itself to the archive.
+// will enumerate contents only, without adding the folder itself to the archive.
 //
 // Map values should typically use slash ('/') as the separator regardless of
 // the platform, as most archive formats standardize on that rune as the
@@ -100,14 +100,19 @@ func FilesFromDisk(ctx context.Context, options *FromDiskOptions, filenames map[
 			var linkTarget string
 			if isSymlink(info) {
 				if options != nil && options.FollowSymlinks {
-					// dereference symlinks
-					filename, err = os.Readlink(filename)
+					originalFilename := filename
+					filename, info, err = followSymlink(filename)
 					if err != nil {
-						return fmt.Errorf("%s: readlink: %w", filename, err)
+						return err
 					}
-					info, err = os.Stat(filename)
-					if err != nil {
-						return fmt.Errorf("%s: statting dereferenced symlink: %w", filename, err)
+					if info.IsDir() {
+						symlinkDirFiles, err := FilesFromDisk(ctx, options, map[string]string{filename: nameInArchive})
+						if err != nil {
+							return fmt.Errorf("getting files from symlink directory %s dereferenced to %s: %w", originalFilename, linkTarget, err)
+						}
+
+						files = append(files, symlinkDirFiles...)
+						return nil
 					}
 				} else {
 					// preserve symlinks
@@ -133,6 +138,7 @@ func FilesFromDisk(ctx context.Context, options *FromDiskOptions, filenames map[
 			}
 
 			files = append(files, file)
+
 			return nil
 		})
 		if walkErr != nil {
@@ -153,11 +159,24 @@ func nameOnDiskToNameInArchive(nameOnDisk, rootOnDisk, rootInArchive string) str
 	// one function is easier to reason about and test. I suspect the performance
 	// penalty is insignificant.
 	if strings.HasSuffix(rootOnDisk, string(filepath.Separator)) {
+		// "map keys that end in a separator will enumerate contents only,
+		// without adding the folder itself to the archive."
 		rootInArchive = trimTopDir(rootInArchive)
 	} else if rootInArchive == "" {
+		// "map values that are empty string are interpreted as the base name
+		// of the file (sans path) in the root of the archive"
 		rootInArchive = filepath.Base(rootOnDisk)
 	}
+	if rootInArchive == "." {
+		// an in-archive root of "." is an escape hatch for the above rule
+		// where an empty in-archive root means to use the base name of the
+		// file; if the user does not want this, they can specify a "." to
+		// still put it in the root of the archive
+		rootInArchive = ""
+	}
 	if strings.HasSuffix(rootInArchive, "/") {
+		// "map values that end in a slash will use the base name of the file in
+		// that folder of the archive."
 		rootInArchive += filepath.Base(rootOnDisk)
 	}
 	truncPath := strings.TrimPrefix(nameOnDisk, rootOnDisk)
@@ -167,27 +186,22 @@ func nameOnDiskToNameInArchive(nameOnDisk, rootOnDisk, rootInArchive string) str
 // trimTopDir strips the top or first directory from the path.
 // It expects a forward-slashed path.
 //
-// For example, "a/b/c" => "b/c".
+// Examples: "a/b/c" => "b/c", "/a/b/c" => "b/c"
 func trimTopDir(dir string) string {
-	if len(dir) > 0 && dir[0] == '/' {
-		dir = dir[1:]
-	}
-	if pos := strings.Index(dir, "/"); pos >= 0 {
-		return dir[pos+1:]
-	}
-	return dir
+	return strings.TrimPrefix(dir, topDir(dir)+"/")
 }
 
 // topDir returns the top or first directory in the path.
 // It expects a forward-slashed path.
 //
-// For example, "a/b/c" => "a".
+// Examples: "a/b/c" => "a", "/a/b/c" => "/a"
 func topDir(dir string) string {
+	var start int
 	if len(dir) > 0 && dir[0] == '/' {
-		dir = dir[1:]
+		start = 1
 	}
-	if pos := strings.Index(dir, "/"); pos >= 0 {
-		return dir[:pos]
+	if pos := strings.Index(dir[start:], "/"); pos >= 0 {
+		return dir[:pos+start]
 	}
 	return dir
 }
@@ -238,7 +252,7 @@ func openAndCopyFile(file FileInfo, w io.Writer) error {
 	// When file is in use and size is being written to, creating the compressed
 	// file will fail with "archive/tar: write too long." Using CopyN gracefully
 	// handles this.
-	_, err = io.Copy(w, fileReader)
+	_, err = io.CopyN(w, fileReader, file.Size())
 	if err != nil && err != io.EOF {
 		return err
 	}
@@ -319,5 +333,45 @@ func (s *skipList) add(dir string) {
 	}
 	if !dontAdd {
 		*s = append(*s, dir)
+	}
+}
+
+// followSymlink follows a symlink until it finds a non-symlink,
+// returning the target path, file info, and any error that occurs.
+// It also checks for symlink loops and maximum depth.
+func followSymlink(filename string) (string, os.FileInfo, error) {
+	visited := make(map[string]bool)
+	visited[filename] = true
+	// Limit in Linux kernel: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/namei.c?id=v3.5#n624
+	const maxDepth = 40
+
+	for {
+		linkPath, err := os.Readlink(filename)
+		if err != nil {
+			return "", nil, fmt.Errorf("%s: readlink: %w", filename, err)
+		}
+		if !filepath.IsAbs(linkPath) {
+			linkPath = filepath.Join(filepath.Dir(filename), linkPath)
+		}
+		info, err := os.Lstat(linkPath)
+		if err != nil {
+			return "", nil, fmt.Errorf("%s: statting dereferenced symlink: %w", filename, err)
+		}
+
+		// Not a symlink, we've found the target, return it
+		if info.Mode()&os.ModeSymlink == 0 {
+			return linkPath, info, nil
+		}
+
+		if visited[linkPath] {
+			return "", nil, fmt.Errorf("%s: symlink loop", filename)
+		}
+
+		if len(visited) >= maxDepth {
+			return "", nil, fmt.Errorf("%s: maximum symlink depth (%d) exceeded", filename, maxDepth)
+		}
+
+		visited[linkPath] = true
+		filename = linkPath
 	}
 }
