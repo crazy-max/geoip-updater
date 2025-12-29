@@ -5,12 +5,12 @@ go 1.24.0
 require (
 	github.com/alecthomas/kong v1.13.0
 	github.com/docker/go-units v0.5.0
-	github.com/dromara/carbon/v2 v2.5.2
+	github.com/dromara/carbon/v2 v2.6.15
 	github.com/mholt/archives v0.1.5
 	github.com/pkg/errors v0.9.1
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rs/zerolog v1.34.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	golang.org/x/sys v0.39.0
 )
 
