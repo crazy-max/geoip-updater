@@ -14,10 +14,14 @@
 
 ## About
 
-**geoip-updater** is a CLI application written in [Go](https://golang.org/) and delivered as a
-[single executable](https://github.com/crazy-max/geoip-updater/releases/latest) (and a
-[Docker image](https://hub.docker.com/r/crazymax/geoip-updater3/)) that lets you download and update
-[MaxMind](https://www.maxmind.com/)'s GeoIP2 databases on a time-based schedule.
+**geoip-updater** keeps [MaxMind](https://www.maxmind.com/)'s GeoIP2 databases up to date.
+Configure the editions you need, provide your MaxMind credentials, and let it
+download fresh MMDB or CSV archives on a schedule for local use.
+
+It is available as a [single executable](https://github.com/crazy-max/geoip-updater/releases/latest)
+and a [container image](https://hub.docker.com/r/crazymax/geoip-updater/), so it
+fits equally well as a small host-level updater or a containerized job in an
+existing stack.
 
 > [!TIP] 
 > Want to be notified of new releases? Check out 🔔 [Diun (Docker Image Update Notifier)](https://github.com/crazy-max/diun)
