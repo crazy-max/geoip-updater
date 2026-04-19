@@ -31,4 +31,4 @@ You are now ready to [create a new issue]({{ config.repo_url }}issues/new/choose
 ## Closure policy
 
 * Issues that don't have the information requested above (when applicable) will be closed immediately and the poster directed to the support guidelines.
-* Issues that go a week without a response from original poster are subject to closure at our discretion.
+* Issues that go a week without a response from the original poster are subject to closure at our discretion.

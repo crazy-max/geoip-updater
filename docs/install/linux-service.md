@@ -1,11 +1,11 @@
-# Run as service on Debian based distro
+# Run as a Service on Debian-Based Distributions
 
 ## Using systemd
 
 !!! warning
-    Make sure to follow the instructions to [install from binary](binary.md) before.
+    Make sure you have followed the instructions in [install from binary](binary.md) first.
 
-To create a new service, paste this content in `/etc/systemd/system/geoip-updater.service`:
+To create a new service, paste this content into `/etc/systemd/system/geoip-updater.service`:
 
 ```
 [Unit]
@@ -31,9 +31,9 @@ Environment=SCHEDULE=0 0 * * 0
 WantedBy=multi-user.target
 ```
 
-Change the user, group, and other required startup values following your needs.
+Change the user, group, and other startup values to suit your environment.
 
-Enable and start geoip-updater at boot:
+Enable and start geoip-updater:
 
 ```shell
 sudo systemctl enable geoip-updater

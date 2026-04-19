@@ -33,17 +33,17 @@ Flags:
 
 ## Environment variables
 
-The following environment variables can be used in place:
+The following environment variables can be used in place of command-line flags:
 
 | Name            | Default       | Description                                                                                                      |
 |-----------------|---------------|------------------------------------------------------------------------------------------------------------------|
-| `EDITION_IDS`   |               | Edition IDs list (comma separated) of MaxMind's GeoIP2 databases to download                                     |
-| `LICENSE_KEY`   |               | [MaxMind License Key](prerequisites.md#license-key) in order to download databases                               |
+| `EDITION_IDS`   |               | Comma-separated list of MaxMind GeoIP2 Edition IDs to download                                                   |
+| `LICENSE_KEY`   |               | [MaxMind license key](prerequisites.md#license-key) used to download databases                                   |
 | `DOWNLOAD_PATH` | _working dir_ | Directory where databases will be stored                                                                         |
 | `SCHEDULE`      |               | [CRON expression](https://godoc.org/github.com/robfig/cron#hdr-CRON_Expression_Format) to schedule geoip-updater |
-| `LOG_LEVEL`     | `info`        | Log level output                                                                                                 |
-| `LOG_JSON`      | `false`       | Enable JSON logging output                                                                                       |
-| `LOG_CALLER`    | `false`       | Enable to add `file:line` of the caller                                                                          |
+| `LOG_LEVEL`     | `info`        | Log level                                                                                                        |
+| `LOG_JSON`      | `false`       | Enable JSON log output                                                                                           |
+| `LOG_CALLER`    | `false`       | Add `file:line` information for the caller                                                                       |
 
 !!! tip
-    List of supported edition IDs available [here](../faq.md#supported-edition-ids).
+    The list of supported edition IDs is available [here](../faq.md#supported-edition-ids).

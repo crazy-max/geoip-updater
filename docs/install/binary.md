@@ -2,7 +2,7 @@
 
 ## Download
 
-geoip-updater binaries are available on [releases]({{ config.repo_url }}releases/latest) page.
+geoip-updater binaries are available on the [releases]({{ config.repo_url }}releases/latest) page.
 
 Choose the archive matching the destination platform:
 
@@ -23,22 +23,22 @@ Choose the archive matching the destination platform:
 * [`geoip-updater_{{ git.tag | trim('v') }}_windows_amd64.zip`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_windows_amd64.zip)
 * [`geoip-updater_{{ git.tag | trim('v') }}_windows_arm64.zip`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_windows_arm64.zip)
 
-And extract geoip-updater:
+Then extract `geoip-updater`:
 
 ```shell
 wget -qO- {{ config.repo_url }}releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_amd64.tar.gz | tar -zxvf - geoip-updater
 ```
 
-After getting the binary, it can be tested with [`./geoip-updater --help`](../usage/cli.md) command and moved to a
-permanent location.
+After downloading the binary, test it with [`./geoip-updater --help`](../usage/cli.md)
+and move it to a permanent location.
 
 ## Server configuration
 
-Steps below are the recommended server configuration.
+The steps below describe the recommended server configuration.
 
 ### Prepare environment
 
-Create user to run geoip-updater (ex. `geoip-updater`)
+Create a user to run geoip-updater, for example `geoip-updater`:
 
 ```shell
 groupadd geoip-updater
@@ -60,16 +60,16 @@ cp geoip-updater /usr/local/bin/geoip-updater
 
 ## Running geoip-updater
 
-After the above steps, two options to run geoip-updater:
+After the steps above, there are two ways to run geoip-updater:
 
 ### 1. Creating a service file (recommended)
 
-See how to create [Linux service](linux-service.md) to start geoip-updater automatically.
+See [Linux service](linux-service.md) to start geoip-updater automatically.
 
 ### 2. Running from terminal
 
 ```shell
-/usr/local/bin/geoip_updater \
+/usr/local/bin/geoip-updater \
   --edition-ids GeoLite2-City,GeoLite2-Country \
   --license-key 0123456789ABCD \
   --download-path /usr/local/share/geoip \
@@ -78,8 +78,8 @@ See how to create [Linux service](linux-service.md) to start geoip-updater autom
 
 ## Updating to a new version
 
-You can update to a new version of geoip-updater by stopping it, replacing the binary at
-`/usr/local/bin/geoip-updater` and restarting the instance.
+To update geoip-updater, stop it, replace the binary at
+`/usr/local/bin/geoip-updater`, and restart the service or process.
 
-If you have carried out the installation steps as described above, the binary should have the generic name
-`geoip-updater`. Do not change this, i.e. to include the version number.
+If you followed the installation steps above, the binary should keep the generic
+name `geoip-updater`. Do not rename it to include the version number.

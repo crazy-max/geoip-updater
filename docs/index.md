@@ -26,10 +26,13 @@ can run it on a host directly or as a containerized job in an existing stack.
 
 ## Features
 
-* Support for MMDB and CSV databases
-* List of Edition IDs currently supported are available [here](https://github.com/crazy-max/geoip-updater/blob/master/pkg/maxmind/editionid.go#L10-L18).
-* Archive authenticity checked
-* Internal cron implementation through go routines
+* Downloads and refreshes supported GeoIP2 and GeoLite2 databases automatically
+* Supports both MMDB and CSV database formats
+* Runs on a configurable cron schedule without external scheduling tools
+* Verifies downloaded archives before updating local database files
+* Supports multiple Edition IDs in a single run
+
+The full list of supported Edition IDs is available [here](https://github.com/crazy-max/geoip-updater/blob/master/pkg/maxmind/editionid.go).
 
 ## License
 
