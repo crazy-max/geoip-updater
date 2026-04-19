@@ -15,20 +15,24 @@
 
 ## What is geoip-updater?
 
-**geoip-updater** :globe_with_meridians: is a CLI application written in [Go](https://golang.org/) and delivered as a
-[single executable]({{ config.repo_url }}releases/latest) (and a
-[Docker image](https://hub.docker.com/r/crazymax/geoip-updater/)) that lets you download and update
-[MaxMind](https://www.maxmind.com/)'s GeoIP2 databases on a time-based schedule.
+**geoip-updater** :globe_with_meridians: keeps [MaxMind](https://www.maxmind.com/)'s GeoIP2
+databases up to date. Configure the editions you need, provide your MaxMind
+credentials, and let it download fresh MMDB or CSV archives on a schedule for
+local use.
 
-With Go, this can be done with an independent binary distribution across all platforms and architectures that Go supports.
-This support includes Linux, macOS, and Windows, on architectures like amd64, 386, ARM, PowerPC, and others.
+It is available as a [single executable]({{ config.repo_url }}/releases/latest)
+and a [container image](https://hub.docker.com/r/crazymax/geoip-updater/), so you
+can run it on a host directly or as a containerized job in an existing stack.
 
 ## Features
 
-* Support for MMDB and CSV databases
-* List of Edition IDs currently supported are available [here](https://github.com/crazy-max/geoip-updater/blob/master/pkg/maxmind/editionid.go#L10-L18).
-* Archive authenticity checked
-* Internal cron implementation through go routines
+* Downloads and refreshes supported GeoIP2 and GeoLite2 databases automatically
+* Supports both MMDB and CSV database formats
+* Runs on a configurable cron schedule without external scheduling tools
+* Verifies downloaded archives before updating local database files
+* Supports multiple Edition IDs in a single run
+
+The full list of supported Edition IDs is available [here](https://github.com/crazy-max/geoip-updater/blob/master/pkg/maxmind/editionid.go).
 
 ## License
 

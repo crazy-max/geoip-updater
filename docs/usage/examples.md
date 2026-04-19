@@ -1,24 +1,25 @@
 # Examples
 
-In this section we quickly go over basic ways to run geoip-updater.
+This section covers a few basic ways to run geoip-updater.
 
 ## Single database
 
-Download `GeoLite2-City` database with licence key `0123456789ABCD`:
+Download the `GeoLite2-City` database with license key `0123456789ABCD`:
 
 ```shell
-geoip_updater \
+geoip-updater \
   --edition-ids GeoLite2-City \
   --license-key 0123456789ABCD
 ```
 
-## Multi databases
+## Multiple databases
 
-Download `GeoLite2-City` and `GeoLite2-Country` databases with licence key `0123456789ABCD` to
-`/usr/local/share/geoip` with log level to `debug` on a time-based schedule (`every week`)
+Download the `GeoLite2-City` and `GeoLite2-Country` databases with license key
+`0123456789ABCD` to `/usr/local/share/geoip`, set the log level to `debug`, and
+run the update on a weekly schedule:
 
 ```shell
-geoip_updater \
+geoip-updater \
   --edition-ids GeoLite2-City,GeoLite2-Country \
   --license-key 0123456789ABCD \
   --download-path /usr/local/share/geoip \

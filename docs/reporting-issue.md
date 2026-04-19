@@ -2,9 +2,9 @@
 
 ## Before submitting an issue
 
-First, [be a good guy](https://github.com/kossnocorp/etiquette/blob/master/README.md).
+First, [be respectful](https://github.com/kossnocorp/opensource.how/blob/classic/README.md).
 
-Please do a search in [open issues]({{ config.repo_url }}issues?utf8=%E2%9C%93&q=) to see if the issue or feature
+Please do a search in [open issues]({{ config.repo_url }}/issues?utf8=%E2%9C%93&q=) to see if the issue or feature
 request has already been filed.
 
 If you find your issue already exists, make relevant comments and add your
@@ -26,9 +26,9 @@ File a single issue per problem and feature request.
 
 The more information you can provide, the more likely someone will be successful reproducing the issue and finding a fix.
 
-You are now ready to [create a new issue]({{ config.repo_url }}issues/new/choose)!
+You are now ready to [create a new issue]({{ config.repo_url }}/issues/new/choose)!
 
 ## Closure policy
 
 * Issues that don't have the information requested above (when applicable) will be closed immediately and the poster directed to the support guidelines.
-* Issues that go a week without a response from original poster are subject to closure at our discretion.
+* Issues that go a week without a response from the original poster are subject to closure at our discretion.
