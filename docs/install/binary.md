@@ -2,31 +2,31 @@
 
 ## Download
 
-geoip-updater binaries are available on the [releases]({{ config.repo_url }}releases/latest) page.
+geoip-updater binaries are available on the [releases]({{ config.repo_url }}/releases/latest) page.
 
 Choose the archive matching the destination platform:
 
-* [`geoip-updater_{{ git.tag | trim('v') }}_darwin_amd64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_darwin_amd64.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_darwin_arm64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_darwin_arm64.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_freebsd_386.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_freebsd_386.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_freebsd_amd64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_freebsd_amd64.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_386.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_386.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_amd64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_amd64.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_arm64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_arm64.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_armv5.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_armv5.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_armv6.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_armv6.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_armv7.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_armv7.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_ppc64le.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_ppc64le.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_riscv64.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_riscv64.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_linux_s390x.tar.gz`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_s390x.tar.gz)
-* [`geoip-updater_{{ git.tag | trim('v') }}_windows_386.zip`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_windows_386.zip)
-* [`geoip-updater_{{ git.tag | trim('v') }}_windows_amd64.zip`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_windows_amd64.zip)
-* [`geoip-updater_{{ git.tag | trim('v') }}_windows_arm64.zip`]({{ config.repo_url }}/releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_windows_arm64.zip)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_darwin_amd64.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_darwin_amd64.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_darwin_arm64.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_darwin_arm64.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_freebsd_386.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_freebsd_386.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_freebsd_amd64.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_freebsd_amd64.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_386.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_386.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_amd64.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_amd64.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_arm64.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_arm64.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_armv5.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_armv5.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_armv6.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_armv6.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_armv7.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_armv7.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_ppc64le.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_ppc64le.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_riscv64.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_riscv64.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_s390x.tar.gz`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_s390x.tar.gz)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_windows_386.zip`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_windows_386.zip)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_windows_amd64.zip`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_windows_amd64.zip)
+* [`geoip-updater_{{ latest_stable_tag | trim('v') }}_windows_arm64.zip`]({{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_windows_arm64.zip)
 
 Then extract `geoip-updater`:
 
 ```shell
-wget -qO- {{ config.repo_url }}releases/download/v{{ git.tag | trim('v') }}/geoip-updater_{{ git.tag | trim('v') }}_linux_amd64.tar.gz | tar -zxvf - geoip-updater
+wget -qO- {{ config.repo_url }}/releases/download/{{ latest_stable_tag }}/geoip-updater_{{ latest_stable_tag | trim('v') }}_linux_amd64.tar.gz | tar -zxvf - geoip-updater
 ```
 
 After downloading the binary, test it with [`./geoip-updater --help`](../usage/cli.md)

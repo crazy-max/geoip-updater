@@ -20,7 +20,7 @@ databases up to date. Configure the editions you need, provide your MaxMind
 credentials, and let it download fresh MMDB or CSV archives on a schedule for
 local use.
 
-It is available as a [single executable]({{ config.repo_url }}releases/latest)
+It is available as a [single executable]({{ config.repo_url }}/releases/latest)
 and a [container image](https://hub.docker.com/r/crazymax/geoip-updater/), so you
 can run it on a host directly or as a containerized job in an existing stack.
 
