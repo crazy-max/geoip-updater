@@ -27,7 +27,6 @@ type Client struct {
 
 // New creates new geoip-updater instance
 func New(cfg *config.Configuration) (*Client, error) {
-	// Check edition IDs
 	var eids []maxmind.EditionID
 	for _, eidStr := range cfg.Cli.EditionIDs {
 		eid, err := maxmind.GetEditionID(eidStr)
@@ -37,52 +36,47 @@ func New(cfg *config.Configuration) (*Client, error) {
 		eids = append(eids, eid)
 	}
 
-	// MaxMind client
-	mmcli, err := maxmind.New(context.Background(), maxmind.Config{
-		Logger:     log.Logger,
-		LicenseKey: cfg.Cli.LicenseKey,
-		UserAgent:  fmt.Sprintf("geoip-updater/%s go/%s %s", cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)), //nolint:staticcheck // ignoring "SA1019: strings.Title is deprecated", as for our use we don't need full unicode support
-	})
-	if err != nil {
-		return nil, err
-	}
-
 	return &Client{
 		cfg: cfg,
 		cron: cron.New(cron.WithParser(cron.NewParser(
 			cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor),
 		)),
-		mm:   mmcli,
 		eids: eids,
 	}, nil
 }
 
 // Start starts geoip-updater
-func (c *Client) Start() error {
+func (c *Client) Start(ctx context.Context) error {
 	var err error
+	c.mm, err = maxmind.New(ctx, maxmind.Config{
+		Logger:     log.Logger,
+		LicenseKey: c.cfg.Cli.LicenseKey,
+		UserAgent:  fmt.Sprintf("geoip-updater/%s go/%s %s", c.cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)), //nolint:staticcheck // ignoring "SA1019: strings.Title is deprecated", as for our use we don't need full unicode support
+	})
+	if err != nil {
+		return err
+	}
 
-	// Run on startup
 	c.Run()
 
-	// Check scheduler enabled
 	if c.cfg.Cli.Schedule == "" {
 		return nil
 	}
 
-	// Init scheduler
 	c.jobID, err = c.cron.AddJob(c.cfg.Cli.Schedule, c)
 	if err != nil {
 		return err
 	}
 	log.Info().Msgf("Cron initialized with schedule %s", c.cfg.Cli.Schedule)
 
-	// Start scheduler
 	c.cron.Start()
 	log.Info().Msgf("Next run in %s (%s)",
 		carbon.CreateFromStdTime(c.cron.Entry(c.jobID).Next).DiffAbsInString(),
 		c.cron.Entry(c.jobID).Next)
 
-	select {}
+	<-ctx.Done()
+	<-c.cron.Stop().Done()
+	return nil
 }
 
 // Run runs geoip-updater process
@@ -92,6 +86,7 @@ func (c *Client) Run() {
 		return
 	}
 	defer atomic.StoreUint32(&c.locker, 0)
+
 	if c.jobID > 0 {
 		defer log.Info().Msgf("Next run in %s (%s)",
 			carbon.CreateFromStdTime(c.cron.Entry(c.jobID).Next).DiffAbsInString(),
@@ -124,12 +119,5 @@ func (c *Client) Run() {
 				Time("modtime", db.ModTime()).
 				Msgf("%s database successfully updated", db.Name())
 		}
-	}
-}
-
-// Close closes geoip-updater
-func (c *Client) Close() {
-	if c.cron != nil {
-		c.cron.Stop()
 	}
 }
