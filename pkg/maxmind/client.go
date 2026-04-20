@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -24,22 +24,30 @@ type Client struct {
 
 // Config defines the config for maxmind
 type Config struct {
-	Logger     zerolog.Logger
 	LicenseKey string
 	BaseURL    string
 	UserAgent  string
+	HTTPClient *http.Client
+	Logger     zerolog.Logger
 }
 
 // New returns a maxmind client
-func New(config Config) (*Client, error) {
+func New(ctx context.Context, config Config) (*Client, error) {
 	if config.LicenseKey == "" {
 		return nil, errors.New("License key required")
 	}
 
-	if config.BaseURL == "" {
-		config.BaseURL = "https://download.maxmind.com"
+	httpClient := config.HTTPClient
+	if config.HTTPClient == nil {
+		httpClient = http.DefaultClient
 	}
-	_, err := url.ParseRequestURI(config.BaseURL)
+
+	baseURL := config.BaseURL
+	if config.BaseURL == "" {
+		baseURL = "https://download.maxmind.com"
+	}
+
+	_, err := url.ParseRequestURI(baseURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "Invalid base URL")
 	}
@@ -48,22 +56,23 @@ func New(config Config) (*Client, error) {
 	if err != nil {
 		workBaseDir = os.TempDir()
 	}
-	workDir := path.Join(workBaseDir, ".geoip-updater")
+
+	workDir := filepath.Join(workBaseDir, ".geoip-updater")
 	if err := os.MkdirAll(workDir, 0o755); err != nil {
 		return nil, errors.Wrap(err, "Cannot create work directory")
 	}
-	if err := isDirWriteable(workDir); err != nil {
+	if err := checkDirWritable(workDir); err != nil {
 		return nil, errors.Wrap(err, "Work directory is not writable")
 	}
 	config.Logger.Debug().Msgf("Work directory is %s", workDir)
 
 	return &Client{
-		ctx:        context.Background(),
+		ctx:        ctx,
 		log:        config.Logger,
-		http:       http.DefaultClient,
+		http:       httpClient,
 		workDir:    workDir,
 		licenseKey: config.LicenseKey,
-		baseURL:    config.BaseURL,
+		baseURL:    baseURL,
 		userAgent:  config.UserAgent,
 	}, nil
 }

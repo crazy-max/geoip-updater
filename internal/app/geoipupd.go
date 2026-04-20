@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 	"strings"
@@ -37,7 +38,7 @@ func New(cfg *config.Configuration) (*Client, error) {
 	}
 
 	// MaxMind client
-	mmcli, err := maxmind.New(maxmind.Config{
+	mmcli, err := maxmind.New(context.Background(), maxmind.Config{
 		Logger:     log.Logger,
 		LicenseKey: cfg.Cli.LicenseKey,
 		UserAgent:  fmt.Sprintf("geoip-updater/%s go/%s %s", cfg.App.Version, runtime.Version()[2:], strings.Title(runtime.GOOS)), //nolint:staticcheck // ignoring "SA1019: strings.Title is deprecated", as for our use we don't need full unicode support
