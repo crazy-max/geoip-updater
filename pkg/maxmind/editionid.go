@@ -23,54 +23,40 @@ const (
 	EIDGeoLite2CountryCSV = EditionID("GeoLite2-Country-CSV")
 )
 
+// Suffix represents the suffix of a database
+type Suffix string
+
+// Suffix enum
+const (
+	SfxTarGz = Suffix("tar.gz")
+	SfxZip   = Suffix("zip")
+)
+
+var editionIDSuffixes = map[EditionID]Suffix{
+	EIDGeoIP2City:         SfxTarGz,
+	EIDGeoIP2CityCSV:      SfxZip,
+	EIDGeoIP2Country:      SfxTarGz,
+	EIDGeoIP2CountryCSV:   SfxZip,
+	EIDGeoLite2ASN:        SfxTarGz,
+	EIDGeoLite2ASNCSV:     SfxZip,
+	EIDGeoLite2City:       SfxTarGz,
+	EIDGeoLite2CityCSV:    SfxZip,
+	EIDGeoLite2Country:    SfxTarGz,
+	EIDGeoLite2CountryCSV: SfxZip,
+}
+
 // GetEditionID returns an edition ID from string
 func GetEditionID(eidStr string) (EditionID, error) {
-	eids := []EditionID{
-		EIDGeoIP2City,
-		EIDGeoIP2CityCSV,
-		EIDGeoIP2Country,
-		EIDGeoIP2CountryCSV,
-		EIDGeoLite2ASN,
-		EIDGeoLite2ASNCSV,
-		EIDGeoLite2City,
-		EIDGeoLite2CityCSV,
-		EIDGeoLite2Country,
-		EIDGeoLite2CountryCSV,
-	}
-	for _, eid := range eids {
-		if EditionID(eidStr) == eid {
-			return eid, nil
-		}
+	eid := EditionID(eidStr)
+	if _, ok := editionIDSuffixes[eid]; ok {
+		return eid, nil
 	}
 	return "", errors.Errorf("invalid edition ID: %s", eidStr)
 }
 
 // Suffix returns the suffix linked of an edition ID
 func (eid EditionID) Suffix() Suffix {
-	switch eid {
-	case EIDGeoIP2City:
-		return SfxTarGz
-	case EIDGeoIP2CityCSV:
-		return SfxZip
-	case EIDGeoIP2Country:
-		return SfxTarGz
-	case EIDGeoIP2CountryCSV:
-		return SfxZip
-	case EIDGeoLite2ASN:
-		return SfxTarGz
-	case EIDGeoLite2ASNCSV:
-		return SfxZip
-	case EIDGeoLite2City:
-		return SfxTarGz
-	case EIDGeoLite2CityCSV:
-		return SfxZip
-	case EIDGeoLite2Country:
-		return SfxTarGz
-	case EIDGeoLite2CountryCSV:
-		return SfxZip
-	default:
-		return ""
-	}
+	return editionIDSuffixes[eid]
 }
 
 // Filename returns the filename of an edition ID
@@ -81,4 +67,9 @@ func (eid EditionID) Filename() string {
 // String returns the string representation of an edition ID
 func (eid EditionID) String() string {
 	return string(eid)
+}
+
+// String returns the string representation of a suffix
+func (sfx Suffix) String() string {
+	return string(sfx)
 }

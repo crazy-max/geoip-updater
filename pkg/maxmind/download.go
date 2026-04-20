@@ -1,19 +1,20 @@
 package maxmind
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"io/fs"
 	"net/http"
+	"net/url"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
 
 	"github.com/docker/go-units"
 	"github.com/mholt/archives"
 	"github.com/pkg/errors"
-	"github.com/rs/zerolog/log"
 )
 
 // Downloader represents an active downloader object
@@ -27,18 +28,24 @@ type Downloader struct {
 func (c *Client) NewDownloader(eid EditionID, dlDir string) (*Downloader, error) {
 	var err error
 
-	// Check download directory
 	if dlDir == "" {
-		dlDir = filepath.Dir(os.Args[0])
+		execPath, err := os.Executable()
+		if err != nil {
+			return nil, errors.Wrap(err, "Cannot determine executable path")
+		}
+		dlDir = filepath.Dir(execPath)
 	}
-	dlDir, err = filepath.Abs(path.Clean(dlDir))
+
+	dlDir, err = filepath.Abs(filepath.Clean(dlDir))
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot get absolute path of download directory")
 	}
+
 	if err := os.MkdirAll(dlDir, 0o755); err != nil {
 		return nil, errors.Wrap(err, "Cannot create download directory")
 	}
-	if err := isDirWriteable(dlDir); err != nil {
+
+	if err := checkDirWritable(dlDir); err != nil {
 		return nil, errors.Wrap(err, "Download directory is not writable")
 	}
 
@@ -51,25 +58,16 @@ func (c *Client) NewDownloader(eid EditionID, dlDir string) (*Downloader, error)
 
 // Download downloads a database
 func (d *Downloader) Download() ([]os.FileInfo, error) {
-	// Retrieve expected hash
 	expHash, err := d.expectedHash()
 	if err != nil {
 		return nil, errors.Wrap(err, "Cannot get archive checksum")
 	}
 
-	// Download DB archive
-	archive := path.Join(d.workDir, d.eid.Filename())
+	archive := filepath.Join(d.workDir, d.eid.Filename())
 	if err := d.downloadArchive(expHash, archive); err != nil {
 		return nil, err
 	}
 
-	// Create checksum file
-	checksumFile := path.Join(d.workDir, fmt.Sprintf(".%s.%s", d.eid.Filename(), "sha256"))
-	if err := createFile(checksumFile, expHash); err != nil {
-		return nil, errors.Errorf("Cannot create checksum file %s", checksumFile)
-	}
-
-	// Extract DB from archive
 	dbs, err := d.extractArchive(archive)
 	if err != nil {
 		return nil, err
@@ -79,7 +77,12 @@ func (d *Downloader) Download() ([]os.FileInfo, error) {
 }
 
 func (d *Downloader) expectedHash() (string, error) {
-	req, err := http.NewRequestWithContext(d.ctx, "GET", fmt.Sprintf("%s/app/geoip_download", d.baseURL), nil)
+	downloadURL, err := url.JoinPath(d.baseURL, "app", "geoip_download")
+	if err != nil {
+		return "", errors.Wrap(err, "Cannot create download URL")
+	}
+
+	req, err := http.NewRequestWithContext(d.ctx, http.MethodGet, downloadURL, nil)
 	if err != nil {
 		return "", errors.Wrap(err, "Request failed")
 	}
@@ -91,7 +94,7 @@ func (d *Downloader) expectedHash() (string, error) {
 	req.URL.RawQuery = q.Encode()
 
 	if d.userAgent != "" {
-		req.Header.Add("User-Agent", d.userAgent)
+		req.Header.Set("User-Agent", d.userAgent)
 	}
 
 	res, err := d.http.Do(req)
@@ -109,16 +112,21 @@ func (d *Downloader) expectedHash() (string, error) {
 		return "", errors.Wrap(err, "Cannot download checksum file")
 	}
 
-	checksumAr := strings.SplitN(strings.TrimSpace(string(checksum)), " ", 2)
-	if len(checksumAr[0]) != 64 {
+	checksumFields := strings.Fields(string(checksum))
+	if len(checksumFields) == 0 || len(checksumFields[0]) != sha256.Size*2 {
+		return "", errors.Errorf("Invalid checksum: %s", checksum)
+	}
+	if _, err := hex.DecodeString(checksumFields[0]); err != nil {
 		return "", errors.Errorf("Invalid checksum: %s", checksum)
 	}
 
-	return checksumAr[0], nil
+	return checksumFields[0], nil
 }
 
 func (d *Downloader) downloadArchive(expHash string, archive string) error {
-	if _, err := os.Stat(archive); err == nil {
+	archivePerm := os.FileMode(0o644)
+	if info, err := os.Stat(archive); err == nil {
+		archivePerm = info.Mode().Perm()
 		curHash, err := checksumFromFile(archive)
 		if err != nil {
 			return errors.Wrap(err, "Cannot get archive checksum")
@@ -136,7 +144,12 @@ func (d *Downloader) downloadArchive(expHash string, archive string) error {
 		Str("edition_id", d.eid.String()).
 		Msgf("Downloading %s archive...", filepath.Base(archive))
 
-	req, err := http.NewRequestWithContext(d.ctx, "GET", fmt.Sprintf("%s/app/geoip_download", d.baseURL), nil)
+	downloadURL, err := url.JoinPath(d.baseURL, "app", "geoip_download")
+	if err != nil {
+		return errors.Wrap(err, "Cannot create download URL")
+	}
+
+	req, err := http.NewRequestWithContext(d.ctx, http.MethodGet, downloadURL, nil)
 	if err != nil {
 		return errors.Wrap(err, "Request failed")
 	}
@@ -148,7 +161,7 @@ func (d *Downloader) downloadArchive(expHash string, archive string) error {
 	req.URL.RawQuery = q.Encode()
 
 	if d.userAgent != "" {
-		req.Header.Add("User-Agent", d.userAgent)
+		req.Header.Set("User-Agent", d.userAgent)
 	}
 
 	res, err := d.http.Do(req)
@@ -161,24 +174,21 @@ func (d *Downloader) downloadArchive(expHash string, archive string) error {
 		return errors.Errorf("Received invalid status code %d", res.StatusCode)
 	}
 
-	out, err := os.Create(archive)
+	err = writeFileAtomically(archive, archivePerm, func(tempArchive string, out *os.File) error {
+		if _, err := io.Copy(out, res.Body); err != nil {
+			return errors.Wrap(err, "Cannot download archive")
+		}
+		curHash, err := checksumFromFile(tempArchive)
+		if err != nil {
+			return errors.Wrap(err, "Cannot get archive checksum")
+		}
+		if expHash != curHash {
+			return errors.Errorf("Checksum of downloaded archive (%s) does not match the expected one (%s)", curHash, expHash)
+		}
+		return nil
+	})
 	if err != nil {
-		return errors.Wrap(err, "Cannot create archive file")
-	}
-	defer out.Close()
-
-	_, err = io.Copy(out, res.Body)
-	if err != nil {
-		return errors.Wrap(err, "Cannot download archive")
-	}
-
-	curHash, err := checksumFromFile(archive)
-	if err != nil {
-		return errors.Wrap(err, "Cannot get archive checksum")
-	}
-
-	if expHash != curHash {
-		return errors.Errorf("Checksum of downloaded archive (%s) does not match the expected one (%s)", curHash, expHash)
+		return errors.Wrap(err, "Cannot replace archive file")
 	}
 
 	return nil
@@ -206,7 +216,9 @@ func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 		}
 		defer f.Close()
 
-		if filepath.Ext(de.Name()) != ".csv" && filepath.Ext(de.Name()) != ".mmdb" {
+		switch filepath.Ext(de.Name()) {
+		case ".csv", ".mmdb":
+		default:
 			return nil
 		}
 
@@ -220,7 +232,7 @@ func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 			return err
 		}
 
-		sublog := log.With().
+		sublog := d.log.With().
 			Str("edition_id", d.eid.String()).
 			Str("db_name", fi.Name()).
 			Str("db_size", units.HumanSize(float64(fi.Size()))).
@@ -229,7 +241,9 @@ func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 			Logger()
 
 		dbpath := filepath.Join(d.dlDir, fi.Name())
-		if fileExists(dbpath) {
+		dbPerm := fi.Mode().Perm()
+		if existingInfo, err := os.Stat(dbpath); err == nil && !existingInfo.IsDir() {
+			dbPerm = existingInfo.Mode().Perm()
 			curHash, err := checksumFromFile(dbpath)
 			if err != nil {
 				return err
@@ -241,19 +255,16 @@ func (d *Downloader) extractArchive(archive string) ([]os.FileInfo, error) {
 		}
 
 		sublog.Debug().Msg("Extracting database")
-		dbfile, err := os.Create(dbpath)
-		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("Cannot create database file %s", fi.Name()))
-		}
-		defer dbfile.Close()
-
-		_, err = io.Copy(dbfile, reader)
-		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("Cannot extract database file %s", fi.Name()))
-		}
-
-		if err = os.Chtimes(dbpath, fi.ModTime(), fi.ModTime()); err != nil {
-			sublog.Warn().Err(err).Msg("Cannot preserve modtime of database file")
+		if err := writeFileAtomically(dbpath, dbPerm, func(tempDBPath string, dbfile *os.File) error {
+			if _, err := io.Copy(dbfile, reader); err != nil {
+				return errors.Wrapf(err, "Cannot extract database file %s", fi.Name())
+			}
+			if err := os.Chtimes(tempDBPath, fi.ModTime(), fi.ModTime()); err != nil {
+				sublog.Warn().Err(err).Msg("Cannot preserve modtime of database file")
+			}
+			return nil
+		}); err != nil {
+			return errors.Wrapf(err, "Cannot replace database file %s", fi.Name())
 		}
 
 		dbs = append(dbs, fi)
