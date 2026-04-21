@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.13.0 (2025/04/21)
+## 1.13.0 (2026/04/21)
 
 * Refactor MaxMind downloads and harden file writes by @crazy-max in #273
 * Simplify shutdown lifecycle by @crazy-max in #274
