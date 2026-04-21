@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.13.0 (2025/04/21)
+
+* Refactor MaxMind downloads and harden file writes by @crazy-max in #273
+* Simplify shutdown lifecycle by @crazy-max in #274
+* Go 1.26 by @crazy-max in #270
+* MkDocs Materials 9.7.5 by @crazy-max in #271
+* Bump github.com/alecthomas/kong to 1.15.0 in #261
+* Bump github.com/dromara/carbon/v2 to 2.6.16 in #233
+* Bump github.com/rs/zerolog to 1.35.0 in #258
+* Bump golang.org/x/sys to 0.43.0 in #264
+
+**Full Changelog**: [`v1.12.0...v1.13.0`](https://github.com/crazy-max/geoip-updater/compare/v1.12.0...v1.13.0)
+
 ## 1.12.0 (2025/12/30)
 
 * Go 1.25 by @crazy-max in #224
