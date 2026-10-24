@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.13.1 (2026/10/24)
+
+This release is built with Go 1.26.10 to address [CVE-2026-111943](https://go.dev/issue/82345).
+Certificate verification now rejects chains containing eight revoked eMudhra
+intermediate certificates whose private keys were compromised.
+
+The blocked intermediates are:
+
+* Domain-validated TLS: `EM DV TLS CA - G3B` and `EM DV TLS CA - G3C`
+* Organization-validated TLS: `EM OV TLS CA - G3B` and `EM OV TLS CA - G3C`
+* Extended-validation TLS: `EM EV TLS CA - G3B` and `EM EV TLS CA - G3C`
+* Code signing: `EM OV CS CA - G3B` and `EM OV CS CA - G3C`
+
+The G3B intermediates belong to eMudhra BV, and the G3C intermediates belong to
+eMudhra Inc. See the [eMudhra Intermediate CA Compromise](https://emudhra.we-have-a-problem.com/)
+for more details.
+
+There are no functional changes in geoip-updater itself compared to v1.13.0.
+
+**Full Changelog**: [`v1.13.0...v1.13.1`](https://github.com/crazy-max/geoip-updater/compare/v1.13.0...v1.13.1)
+
 ## 1.13.0 (2026/04/21)
 
 * Refactor MaxMind downloads and harden file writes by @crazy-max in #273
